@@ -5,7 +5,8 @@ const session = require('express-session');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const errorHandler = require('errorhandler');
-const client = require('./config/redis');
+// const client = require('./config/redis'); //redis connection
+
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;
 
@@ -19,11 +20,11 @@ const app = express();
 // app.use(cors());
 app.use(
   cors({
-      origin: ['http://localhost:4200', 'http://192.168.1.246:4200'],
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      'Access-Control-Allow-Header':
+    origin: ['http://localhost:4200', 'http://192.168.1.246:4200'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    'Access-Control-Allow-Header':
           'Origin, X-Requested-With, Content-Type, Accept',
-      credentials: true
+    credentials: true
   })
 );
 app.use(require('morgan')('dev'));

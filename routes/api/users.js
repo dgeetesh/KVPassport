@@ -40,7 +40,6 @@ router.post('/register', auth.optional, (req, res, next) => {
 router.post('/login', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
   const user = req.body;
-  console.log(user);
   if(!user.email) {
     return res.status(422).json({
       errors: {
@@ -62,15 +61,15 @@ router.post('/login', auth.optional, (req, res, next) => {
       return next(err);
     }
     if(passportUser) {
-      const user = passportUser;
-      user.token = passportUser.generateJWT();
-      const logInUser = new Users(user);
+      let userData = passportUser;
+      userData.token = passportUser.generateJWT();
+      let logInUser = new Users(userData);
       logInUser.save()
-    .then((resp) => {
-      client.set(logInUser._id, JSON.stringify(resp), function(err, reply) {
-        console.log(reply);
-      });
-    });
+        .then((resp) => {
+          client.set(logInUser._id, JSON.stringify(resp), function(err, reply) {
+            console.log(reply);
+          });
+        });
       return res.json({ user: user.toAuthJSON() });
     }
 
@@ -85,21 +84,20 @@ router.post('/login', auth.optional, (req, res, next) => {
 //     // `req.user` contains the authenticated user.
 //     console.log('req.user',req.user)
 //     res.redirect('/users/' + req.user);
-//   }); 
+//   });
 
 //GET current route (required, only authenticated users have access)
 router.get('/current', auth.required,checkCache, (req, res, next) => {
   const { payload: { id } } = req;
-    return Users.findById(id)
-      .then((user) => {
-        console.log('user',JSON.stringify(user));
-        if(!user) {
-          return res.sendStatus(400);
-        }
-        client.set(user._id, JSON.stringify(user), function(err, reply) {
-          console.log(reply);
-          return res.json({ user: createJson(reply) });
-        });
+  return Users.findById(id)
+    .then((user) => {
+      if(!user) {
+        return res.sendStatus(400);
+      }
+      client.set(user._id, JSON.stringify(user), function(err, reply) {
+        console.log(reply);
+        return res.json({ user: createJson(reply) });
+      });
     });
 });
 

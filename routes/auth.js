@@ -1,6 +1,4 @@
 const jwt = require('express-jwt');
-const mongoose = require('mongoose');
-const Users = mongoose.model('Users');
 
 const getTokenFromHeaders = (req) => {
   // const { headers: { authorization } } = req;
@@ -11,7 +9,7 @@ const getTokenFromHeaders = (req) => {
   if(authorization) {
     return authorization;
   }
-      return null;
+  return null;
 };
 
 const auth = {
