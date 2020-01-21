@@ -2,11 +2,13 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const router = require('express').Router();
 const auth = require('../auth');
+const checkCache = require('../../config/checkCache.js');
 const Users = mongoose.model('Users');
 const client = require('../../config/redis.js');
+const createJson = require('../../config/createJson.js');
 
 //POST new user route (optional, everyone has access)
-router.post('/insert', auth.optional, (req, res, next) => {
+router.post('/register', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
   const user = req.body;
 
@@ -38,7 +40,7 @@ router.post('/insert', auth.optional, (req, res, next) => {
 router.post('/login', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
   const user = req.body;
-
+  console.log(user);
   if(!user.email) {
     return res.status(422).json({
       errors: {
@@ -61,14 +63,13 @@ router.post('/login', auth.optional, (req, res, next) => {
     }
     if(passportUser) {
       const user = passportUser;
-      user.token = `${'token '}`+passportUser.generateJWT();
+      user.token = passportUser.generateJWT();
       const logInUser = new Users(user);
       logInUser.save()
     .then((resp) => {
-      client.set(logInUser._id, resp, function(err, reply) {
+      client.set(logInUser._id, JSON.stringify(resp), function(err, reply) {
         console.log(reply);
       });
-      // console.log('resp',resp)
     });
       return res.json({ user: user.toAuthJSON() });
     }
@@ -87,18 +88,19 @@ router.post('/login', auth.optional, (req, res, next) => {
 //   }); 
 
 //GET current route (required, only authenticated users have access)
-router.get('/current', auth.required, (req, res, next) => {
+router.get('/current', auth.required,checkCache, (req, res, next) => {
   const { payload: { id } } = req;
-  client.get(id, function(err, reply) {
-    console.log('user',reply);
-});
-  // return Users.findById(id)
-  //   .then((user) => {
-  //     if(!user) {
-  //       return res.sendStatus(400);
-  //     }
-  //     return res.json({ user: user.toAuthJSON() });
-  //   });
+    return Users.findById(id)
+      .then((user) => {
+        console.log('user',JSON.stringify(user));
+        if(!user) {
+          return res.sendStatus(400);
+        }
+        client.set(user._id, JSON.stringify(user), function(err, reply) {
+          console.log(reply);
+          return res.json({ user: createJson(reply) });
+        });
+    });
 });
 
 module.exports = router;
