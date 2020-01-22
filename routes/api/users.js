@@ -6,7 +6,10 @@ const checkCache = require('../../config/checkCache.js');
 const Users = mongoose.model('Users');
 const client = require('../../config/redis.js');
 const createJson = require('../../config/createJson.js');
-
+const sharePost = mongoose.model('sharePost');
+var formidable = require('formidable');
+var fs = require('fs');
+var link=`http://localhost:8000/uploads/`
 //POST new user route (optional, everyone has access)
 router.post('/register', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
@@ -66,14 +69,18 @@ router.post('/login', auth.optional, (req, res, next) => {
       let logInUser = new Users(userData);
       logInUser.save()
         .then((resp) => {
+          // console.log('resp',resp);
           client.set(logInUser._id, JSON.stringify(resp), function(err, reply) {
-            console.log(reply);
+            // console.log(reply);
+            console.log('resp',createJson(resp));
+            return res.json({ user: createJson(resp) });
           });
+        }).catch(err=>{
+          console.log('err',err);
         });
-      return res.json({ user: user.toAuthJSON() });
     }
 
-    return status(400);
+    // return status(400);
   })(req, res, next);
 });
 
@@ -100,5 +107,59 @@ router.get('/current', auth.required,checkCache, (req, res, next) => {
       });
     });
 });
+
+router.post('/uploadPost',auth.required, (req, res, next) => {
+  const { payload: { id } } = req;
+  if(id){
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+      var oldpath = files.filetoupload.path;
+      var newpath = './public/uploads/' + files.filetoupload.name;
+      fs.rename(oldpath, newpath, function (err) {
+        if (err) throw err;
+        return Users.findById(id)
+          .then((user) => {
+            if(!user) {
+              return res.sendStatus(400);
+            }
+            let share_post={};
+            share_post.posterName=`${user.userName ||''}`;
+            share_post.userId=user._id;
+            share_post.caption=fields.caption;
+            share_post.postedOn=new Date();
+            share_post.link=link+files.filetoupload.name;
+            var sharePostss=new sharePost(share_post);
+            sharePostss.save()
+              .then((resp) => {
+                console.log('resp',resp);
+                return res.json({ user: createJson(resp) });
+              }).catch(err=>{
+                console.log('err',err);
+              });
+          });
+      });
+    });
+  }else
+  {
+    return res.sendStatus(400);
+  }
+});
+
+router.get('/getAllPosts', auth.required, (req, res, next) => {
+  const { payload: { id } } = req;
+  return sharePost.find({userId:id})
+    .then((sharePost) => {
+      if(!sharePost) {
+        return res.sendStatus(400);
+      }
+      console.log('sharePost',JSON.stringify(sharePost));
+      // client.set(user._id, JSON.stringify(user), function(err, reply) {
+      //   console.log(reply);
+        return res.json({ user: createJson(sharePost) });
+      // });
+    });
+});
+
+
 
 module.exports = router;

@@ -44,6 +44,7 @@ mongoose.set('debug', true);
 
 //Models & routes
 require('./models/Users');
+require('./models/sharePosts');
 require('./config/passport');
 app.use(require('./routes'));
 

@@ -1,8 +1,9 @@
 const createJson = (data) => {
+  let finaldata=JSON.parse(JSON.stringify(data));
   let json={};
-  Object.keys(data).forEach(function(key) {
+  Object.keys(finaldata).forEach(function(key) {
     if(key !== 'salt' && key !== 'hash' ){
-      json[key]=data[key];
+      json[key]=finaldata[key];
     }
   });
   return json;
