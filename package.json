@@ -27,7 +27,7 @@
   "scripts": {
     "test": "jest --collectCoverage --detectOpenHandles",
     "lint": "eslint ./routes ./config ./models ./app.js --fix",
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
