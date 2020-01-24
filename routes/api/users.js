@@ -69,9 +69,7 @@ router.post('/login', auth.optional, (req, res, next) => {
       let logInUser = new Users(userData);
       logInUser.save()
         .then((resp) => {
-          // console.log('resp',resp);
           client.set(logInUser._id, JSON.stringify(resp), function(err, reply) {
-            // console.log(reply);
             console.log('resp',createJson(resp));
             return res.json({ user: createJson(resp) });
           });
