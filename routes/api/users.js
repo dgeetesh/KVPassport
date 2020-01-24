@@ -155,7 +155,7 @@ router.get('/getAllPosts', auth.required, (req, res, next) => {
       console.log('sharePost',JSON.stringify(sharePost));
       // client.set(user._id, JSON.stringify(user), function(err, reply) {
       //   console.log(reply);
-        return res.json({ user: createJson(sharePost) });
+        return res.json({ user: sharePost });
       // });
     });
 });
