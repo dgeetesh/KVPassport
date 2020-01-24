@@ -39,7 +39,8 @@ if(!isProduction) {
 
 
 //Configure Mongoose
-mongoose.connect('mongodb://localhost/passportDB');
+let uri='mongodb+srv://kvuser:kvuser@cluster0-uwtje.mongodb.net/test?retryWrites=true&w=majority';
+mongoose.connect('mongodb+srv://kvuser:kvuser@cluster0-uwtje.mongodb.net/test?retryWrites=true&w=majority');
 mongoose.set('debug', true);
 
 //Models & routes
