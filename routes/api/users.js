@@ -12,6 +12,7 @@ var fs = require('fs');
 var link='http://localhost:8000/uploads/';
 //POST new user route (optional, everyone has access)
 
+//Register the user for the first time parameters includes (email,pass,firstname,lastname)
 router.post('/register', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
   const user = req.body;
@@ -40,7 +41,26 @@ router.post('/register', auth.optional, (req, res, next) => {
     .then(() => res.json({ user: finalUser.toAuthJSON() }));
 });
 
-//POST login route (optional, everyone has access)
+//update the user for the domain parameters include(name,email,dob,domain)
+router.post('/updateDomian', auth.optional, (req, res, next) => {
+  // const { body: { user } } = req;
+  const user = req.body;
+
+  if(!user.email || !user.firstName ||  !user.domain || !user.dob || !user._id || !user.phoneNumber ) {
+    return res.status(422).json({
+      errors: 'All fields are required'
+          });
+  }
+  Users.updateOne({_id:user._id},{$set:{domain:user.domain,dob:user.dob}}).then(resp=>{
+    return res.json({ user: createJson(resp) });
+  }).catch(err=>{
+    res.status(500)
+  });
+
+});
+
+
+//POST login route (optional, everyone has access) parameters are(email,password)
 router.post('/login', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
   const user = req.body;
@@ -71,26 +91,15 @@ router.post('/login', auth.optional, (req, res, next) => {
       logInUser.save()
         .then((resp) => {
           client.set(logInUser._id, JSON.stringify(resp), function(err, reply) {
-            console.log('resp',createJson(resp));
             return res.json({ user: createJson(resp) });
           });
-        }).catch(err=>{
-          console.log('err',err);
+        }).catch(error=>{
+          console.log('error',error);
         });
     }
-
     // return status(400);
   })(req, res, next);
 });
-
-// router.post('/login',
-//   passport.authenticate('local',{ session: false }),
-//   function(req, res) {
-//     // If this function gets called, authentication was successful.
-//     // `req.user` contains the authenticated user.
-//     console.log('req.user',req.user)
-//     res.redirect('/users/' + req.user);
-//   });
 
 //GET current route (required, only authenticated users have access)
 router.get('/current', auth.required,checkCache, (req, res, next) => {
@@ -107,6 +116,7 @@ router.get('/current', auth.required,checkCache, (req, res, next) => {
     });
 });
 
+//POST current route (required, only authenticated users have access) sharig post 
 router.post('/uploadPost',auth.required, (req, res, next) => {
   const { payload: { id } } = req;
   if(id){
@@ -144,6 +154,7 @@ router.post('/uploadPost',auth.required, (req, res, next) => {
   }
 });
 
+//POST current route (required, only authenticated users have access) get all post
 router.get('/getAllPosts', auth.required, (req, res, next) => {
   const { payload: { id } } = req;
   return sharePost.find({userId:id})
@@ -151,12 +162,10 @@ router.get('/getAllPosts', auth.required, (req, res, next) => {
       if(!sharePost) {
         return res.sendStatus(400);
       }
-      console.log('sharePost',JSON.stringify(sharePost));
-      // client.set(user._id, JSON.stringify(user), function(err, reply) {
-      //   console.log(reply);
         return res.json({ user: sharePost });
-      // });
-    });
+    }).catch(err=>{
+      console.log(reply);
+  });
 });
 
 

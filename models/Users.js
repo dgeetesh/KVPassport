@@ -6,6 +6,8 @@ const { Schema } = mongoose;
 
 const UsersSchema = new Schema({
   userName: String,
+  firstName: String,
+  lastName: String,
   email: String,
   domain: String,
   gender: String,
@@ -13,19 +15,24 @@ const UsersSchema = new Schema({
   hash: String,
   salt: String,
   accessToken: String,
-  token:String
+  token:String,
+  passingYear:Date,
+  phoneNumber:Number
 });
 
+// set password to user
 UsersSchema.methods.setPassword = function(password) {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
 
+// validate password for the user
 UsersSchema.methods.validatePassword = function(password) {
   const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
   return this.hash === hash;
 };
 
+// generate access token for the user
 UsersSchema.methods.generateJWT = function() {
   const today = new Date();
   const expirationDate = new Date(today);
