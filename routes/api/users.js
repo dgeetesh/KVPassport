@@ -9,7 +9,7 @@ const createJson = require('../../config/createJson.js');
 const sharePost = mongoose.model('sharePost');
 var formidable = require('formidable');
 var fs = require('fs');
-var link='http://localhost:8000/uploads/';
+var link='https://kvmobileapp.herokuapp.com/uploads/';
 //POST new user route (optional, everyone has access)
 
 //Register the user for the first time parameters includes (email,pass,firstname,lastname)
