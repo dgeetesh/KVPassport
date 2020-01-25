@@ -8,4 +8,8 @@ client.on('connect', function() {
   console.log('Redis Connected');
 });
 
+client.on('error', function() {
+  console.log('Redis error');
+});
+
 module.exports=client;
