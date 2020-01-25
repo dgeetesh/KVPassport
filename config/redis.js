@@ -1,15 +1,14 @@
 var redis = require('redis');
 // var client = redis.createClient(); //creates a new client
-let port='18429';
-let host='ec2-35-173-89-108.compute-1.amazonaws.com';
-var client = redis.createClient(port, host); //if need to add the post
+let url='redis://h:pdbfeb4308e0f1e0531afdbc9a6df28a739c18f681bb45bde90b885f2740b2387@ec2-35-173-89-108.compute-1.amazonaws.com:18429';
+var client = redis.createClient(url); //if need to add the post
 
 client.on('connect', function() {
   console.log('Redis Connected');
 });
 
-client.on('error', function() {
-  console.log('Redis error');
+client.on('error', function(err) {
+  console.log('Redis error,',err);
 });
 
 module.exports=client;
