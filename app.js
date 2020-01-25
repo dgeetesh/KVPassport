@@ -39,8 +39,13 @@ if(!isProduction) {
 
 
 //Configure Mongoose
-let uri='mongodb+srv://kvuser:kvuser@cluster0-uwtje.mongodb.net/test?retryWrites=true&w=majority';
-mongoose.connect('mongodb+srv://kvuser:kvuser@cluster0-uwtje.mongodb.net/test?retryWrites=true&w=majority');
+const uri = "mongodb+srv://kvuser:20209090geetesh@cluster0-uwtje.mongodb.net/test?retryWrites=true&w=majority";
+
+// const uri = "mongodb+srv://admintiru:tirusell@cluster0-6jj0a.mongodb.net/test?retryWrites=true&w=majority";
+mongoose.connect(uri);
+// mongoose.error(err=>{
+//   console.log('mongodb error');
+// })
 mongoose.set('debug', true);
 
 //Models & routes
