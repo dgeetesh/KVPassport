@@ -15,7 +15,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 //Initiate our app
 const app = express();
-
+var port = process.env.PORT || 3000;
 //Configure our app
 // app.use(cors());
 app.use(
@@ -74,4 +74,4 @@ app.use(require('./routes'));
 //   });
 // });
 
-app.listen(8000, () => console.log('Server running on http://localhost:8000/'));
+app.listen(port, () => console.log('Server running on http://localhost:3000/'));
