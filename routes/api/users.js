@@ -125,7 +125,7 @@ router.post('/uploadPost',auth.required, (req, res, next) => {
       var oldpath = files.filetoupload.path;
       var newpath = './public/uploads/' + files.filetoupload.name;
       fs.rename(oldpath, newpath, function (err) {
-        if (err) throw err;
+        if (err)  console.log(err);
         return Users.findById(id)
           .then((user) => {
             if(!user) {
@@ -135,6 +135,7 @@ router.post('/uploadPost',auth.required, (req, res, next) => {
             share_post.posterName=`${user.userName ||''}`;
             share_post.userId=user._id;
             share_post.caption=fields.caption;
+            share_post.typeOfFile=fields.typeOfFile;
             share_post.postedOn=new Date();
             share_post.link=link+files.filetoupload.name;
             var sharePostss=new sharePost(share_post);
@@ -154,7 +155,7 @@ router.post('/uploadPost',auth.required, (req, res, next) => {
   }
 });
 
-//POST current route (required, only authenticated users have access) get all post
+//GET current route (required, only authenticated users have access) get all post
 router.get('/getAllPosts', auth.required, (req, res, next) => {
   const { payload: { id } } = req;
   return sharePost.find({userId:id})
@@ -165,9 +166,33 @@ router.get('/getAllPosts', auth.required, (req, res, next) => {
         return res.json({ user: sharePost });
     }).catch(err=>{
       console.log(reply);
+      return res.sendStatus(500);
   });
 });
 
+//POST current route (required, only authenticated users have access) comment in the post
+router.get('/userComment', auth.required, (req, res, next) => {
+  // const { payload: { id } } = req;
+  const postId=req.body.postId;
+  return sharePost.find({_id:postId})
+    .then((sharePost) => {
+      if(!sharePost) {
+        return res.sendStatus(400);
+      }
+      console.log(sharePost)
+
+      // sharePost.updateOne({_id:postId},{$set:{dcoomain:user.domain,dob:user.dob}}).then(resp=>{
+      //   return res.json({ user: createJson(resp) });
+      // }).catch(err=>{
+      //   res.status(500)
+      // });
+
+        return res.json({ user: sharePost });
+    }).catch(err=>{
+      console.log(reply);
+      return res.sendStatus(500);
+  });
+});
 
 
 module.exports = router;
