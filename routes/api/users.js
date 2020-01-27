@@ -171,27 +171,43 @@ router.get('/getAllPosts', auth.required, (req, res, next) => {
 });
 
 //POST current route (required, only authenticated users have access) comment in the post
-router.get('/userComment', auth.required, (req, res, next) => {
-  // const { payload: { id } } = req;
+router.post('/userComment', auth.required, (req, res, next) => {
+  const { payload: { id } } = req;
   const postId=req.body.postId;
+  const commentText=req.body.comment;
+  if(postId){
   return sharePost.find({_id:postId})
-    .then((sharePost) => {
-      if(!sharePost) {
+    .then((sharePostData) => {
+      if(!sharePostData) {
         return res.sendStatus(400);
       }
-      console.log(sharePost)
-
-      // sharePost.updateOne({_id:postId},{$set:{dcoomain:user.domain,dob:user.dob}}).then(resp=>{
-      //   return res.json({ user: createJson(resp) });
-      // }).catch(err=>{
-      //   res.status(500)
-      // });
+      let comment= {
+        userId:id,
+        comments:commentText,
+        userName:'userName',
+        commentedOn:new Date()
+      };
+      sharePost.update({_id:postId},{$push:{comments:comment}}).then(resp=>{
+        console.log(resp);
+        return res.json({ user: createJson(resp) });
+      }).catch(err=>{
+        res.status(500)
+      });
 
         return res.json({ user: sharePost });
     }).catch(err=>{
-      console.log(reply);
+      console.log(err);
       return res.sendStatus(500);
   });
+  
+}else{
+  return res.status(422).json({
+    errors: {
+      postId: 'is required',
+    },
+  });
+    
+}
 });
 
 
