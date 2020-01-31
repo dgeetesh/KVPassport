@@ -210,5 +210,9 @@ router.post('/userComment', auth.required, (req, res, next) => {
 }
 });
 
-
+router.post('/facebookLogin', (req, res, next) => {
+console.log('facebookLogin resp',req.body);
+console.log(req.body);
+res.send(req.body);
+});
 module.exports = router;
