@@ -215,7 +215,7 @@ console.log('facebookLogin resp',req.body);
 // const { payload: { id } } = req;
 let fbToken=req.body.accessToken;
 let fbUserId =req.body.userID;
-return Users.findById({fbUserId:fbUserId})
+return Users.findOne({fbUserId:fbUserId})
   .then((userData) => {
     console.log('user ----------------',userData)
     if(userData.length > 0) {
