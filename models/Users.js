@@ -17,7 +17,8 @@ const UsersSchema = new Schema({
   accessToken: String,
   token:String,
   passingYear:Date,
-  phoneNumber:Number
+  phoneNumber:Number,
+  fbToken:String
 });
 
 // set password to user

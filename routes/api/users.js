@@ -212,7 +212,29 @@ router.post('/userComment', auth.required, (req, res, next) => {
 
 router.post('/facebookLogin', (req, res, next) => {
 console.log('facebookLogin resp',req.body);
-console.log(req.body);
+// const { payload: { id } } = req;
+let fbToken=req.body.fbToken;
+return Users.find({fbToken:fbToken})
+  .then((user) => {
+    if(user.length > 0) {
+      console.log('user availavble');
+      return res.json({ user: user });
+    }else
+    {
+      const newUser={};
+      newUser.fbToken=fbToken;
+      newUser.email=req.body.email;
+      const finalUser = new Users(newUser);
+      return finalUser.save()
+        .then((resp) => res.json({ user:  resp}));
+    }
+      // return res.json({ user: user });
+  }).catch(err=>{
+    console.log(err);
+    return res.sendStatus(500);
+});
+
+
 res.send(req.body);
 });
 module.exports = router;
