@@ -216,11 +216,13 @@ console.log('facebookLogin resp',req.body);
 let fbToken=req.body.accessToken;
 return Users.find({fbToken:fbToken})
   .then((user) => {
+    console.log('user ----------------',user)
     if(user.length > 0) {
       console.log('user availavble');
       return res.json({ user: user });
     }else
     {
+      console.log('user unavailavble');
       const newUser={};
       newUser.fbToken=fbToken;
       // newUser.email=req.body.email;
