@@ -212,12 +212,10 @@ router.post('/userComment', auth.required, (req, res, next) => {
 
 router.post('/facebookLogin', (req, res, next) => {
 console.log('facebookLogin resp',req.body);
-// const { payload: { id } } = req;
 let fbToken=req.body.accessToken;
 let fbUserId =req.body.userID;
 return Users.findOne({fbUserId:fbUserId})
   .then((userData) => {
-    console.log('user ----------------',userData)
     if(userData) {
       console.log('user availavble');
       return res.json({ user: createJson(userData) });
@@ -233,7 +231,7 @@ return Users.findOne({fbUserId:fbUserId})
       newUser.lastName=req.body.userDetail.last_name ? req.body.userDetail.last_name : '' ;  
       newUser.userName=req.body.userDetail.name;
       // newUser.gender=req.body.gender;
-      newUser.profilePic=req.body.userDetail.profilePic;
+      newUser.profilePic=req.body.userDetail.profile_pic;
       newUser.email = req.body.email ? req.body.email : '';
       const finalUser = new Users(newUser);
       return finalUser.save()
@@ -241,11 +239,8 @@ return Users.findOne({fbUserId:fbUserId})
     }
       // return res.json({ user: user });
   }).catch(err=>{
-    console.log(err);
-    return res.sendStatus(500);
-});
-
-
-res.send(req.body);
+      console.log(err);
+      return res.sendStatus(500);
+  });
 });
 module.exports = router;
