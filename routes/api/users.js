@@ -38,11 +38,11 @@ router.post('/signup', auth.optional, (req, res, next) => {
   finalUser.setPassword(user.password);
 
   return finalUser.save()
-    .then(() => res.json({ user: finalUser.toAuthJSON() }));
+    .then(() => res.json({ user: createJson(finalUser) }));
 });
 
 //update the user for the domain parameters include(name,email,dob,domain)
-router.post('/updateDomian', auth.optional, (req, res, next) => {
+router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
   const user = req.body;
 
