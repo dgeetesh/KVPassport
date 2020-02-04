@@ -214,7 +214,8 @@ router.post('/facebookLogin', (req, res, next) => {
 console.log('facebookLogin resp',req.body);
 // const { payload: { id } } = req;
 let fbToken=req.body.accessToken;
-return Users.find({fbToken:fbToken})
+let fbUserId =req.body.userID;
+return Users.find({fbUserId:fbUserId})
   .then((user) => {
     console.log('user ----------------',user)
     if(user.length > 0) {
@@ -225,6 +226,7 @@ return Users.find({fbToken:fbToken})
       console.log('user unavailavble');
       const newUser={};
       newUser.fbToken=fbToken;
+      newUser.fbUserId=fbUserId;
       // newUser.email=req.body.email;
       // newUser.firstName=req.body.firstName;
       newUser.firstName=req.body.userDetail.first_name ? req.body.userDetail.first_name : '' ;

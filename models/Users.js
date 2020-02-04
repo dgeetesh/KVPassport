@@ -17,6 +17,7 @@ const UsersSchema = new Schema({
   phoneNumber:Number,
   salt: String,
   address: String,
+  fbUserId:String,
   accessToken: String,
   token:String,
   passingYear:Date,
