@@ -217,10 +217,10 @@ let fbToken=req.body.accessToken;
 let fbUserId =req.body.userID;
 return Users.findById({fbUserId:fbUserId})
   .then((userData) => {
-    console.log('user ----------------',user)
-    if(user.length > 0) {
+    console.log('user ----------------',userData)
+    if(userData.length > 0) {
       console.log('user availavble');
-      return res.json({ user: createJson(user) });
+      return res.json({ user: createJson(userData) });
     }else
     {
       console.log('user unavailavble');
