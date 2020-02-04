@@ -225,11 +225,11 @@ return Users.find({fbToken:fbToken})
       newUser.fbToken=fbToken;
       // newUser.email=req.body.email;
       // newUser.firstName=req.body.firstName;
-      newUser.firstName=req.body.first_name ? req.body.first_name : '' ;
-      newUser.lastName=req.body.last_name ? req.body.last_name : '' ;  
-      newUser.userName=req.body.name;
+      newUser.firstName=req.body.userDetail.first_name ? req.body.userDetail.first_name : '' ;
+      newUser.lastName=req.body.userDetail.last_name ? req.body.userDetail.last_name : '' ;  
+      newUser.userName=req.body.userDetail.name;
       // newUser.gender=req.body.gender;
-      newUser.profilePic=req.body.profilePic;
+      newUser.profilePic=req.body.userDetail.profilePic;
       newUser.email = req.body.email ? req.body.email : '';
       const finalUser = new Users(newUser);
       return finalUser.save()
