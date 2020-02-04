@@ -51,7 +51,7 @@ router.post('/updateDomian', auth.optional, (req, res, next) => {
       errors: 'All fields are required'
           });
   }
-  Users.updateOne({_id:user._id},{$set:{domain:user.domain,dob:user.dob}}).then(resp=>{
+  Users.updateOne({_id:user._id},{$set:{domain:user.domain,dob:user.dob,phoneNumber:user.phoneNumber,userCommonToggle:true,domainRegistrationToggle:true}}).then(resp=>{
     return res.json({ user: createJson(resp) });
   }).catch(err=>{
     res.status(500)
@@ -213,7 +213,7 @@ router.post('/userComment', auth.required, (req, res, next) => {
 router.post('/facebookLogin', (req, res, next) => {
 console.log('facebookLogin resp',req.body);
 // const { payload: { id } } = req;
-let fbToken=req.body.fbToken;
+let fbToken=req.body.accessToken;
 return Users.find({fbToken:fbToken})
   .then((user) => {
     if(user.length > 0) {
@@ -223,7 +223,14 @@ return Users.find({fbToken:fbToken})
     {
       const newUser={};
       newUser.fbToken=fbToken;
-      newUser.email=req.body.email;
+      // newUser.email=req.body.email;
+      // newUser.firstName=req.body.firstName;
+      newUser.firstName=req.body.first_name ? req.body.first_name : '' ;
+      newUser.lastName=req.body.last_name ? req.body.last_name : '' ;  
+      newUser.userName=req.body.name;
+      // newUser.gender=req.body.gender;
+      newUser.profilePic=req.body.profilePic;
+      newUser.email = req.body.email ? req.body.email : '';
       const finalUser = new Users(newUser);
       return finalUser.save()
         .then((resp) => res.json({ user:  resp}));

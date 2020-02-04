@@ -11,14 +11,19 @@ const UsersSchema = new Schema({
   email: String,
   domain: String,
   gender: String,
+  profilePic:String,
   dob: Date,
   hash: String,
+  phoneNumber:Number,
   salt: String,
+  address: String,
   accessToken: String,
   token:String,
   passingYear:Date,
   phoneNumber:Number,
-  fbToken:String
+  fbToken:String,
+  userCommonToggle:{type:Boolean,default:false},
+  domainRegistrationToggle:{type:Boolean,default:false},
 });
 
 // set password to user
