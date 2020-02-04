@@ -218,7 +218,7 @@ let fbUserId =req.body.userID;
 return Users.findOne({fbUserId:fbUserId})
   .then((userData) => {
     console.log('user ----------------',userData)
-    if(userData.length > 0) {
+    if(userData) {
       console.log('user availavble');
       return res.json({ user: createJson(userData) });
     }else
