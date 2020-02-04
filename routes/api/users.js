@@ -220,7 +220,7 @@ return Users.find({fbUserId:fbUserId})
     console.log('user ----------------',user)
     if(user.length > 0) {
       console.log('user availavble');
-      return res.json({ user: user });
+      return res.json({ user: createJson(user) });
     }else
     {
       console.log('user unavailavble');
@@ -237,7 +237,7 @@ return Users.find({fbUserId:fbUserId})
       newUser.email = req.body.email ? req.body.email : '';
       const finalUser = new Users(newUser);
       return finalUser.save()
-        .then((resp) => res.json({ user:  resp}));
+        .then((resp) => res.json({ user:  createJson(resp)}));
     }
       // return res.json({ user: user });
   }).catch(err=>{
