@@ -67,7 +67,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
     }
     Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
       console.log('resp',resp);
-      return res.send({msg:'Domain Registered Succesfully'});
+      return res.status(200).json({msg:'Domain Registered Succesfully'});
     }).catch(err=>{
       console.log("err",err)
       res.status(500)
