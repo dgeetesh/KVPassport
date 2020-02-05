@@ -66,6 +66,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
       passingYear:user.passingYear ? user.passingYear : '',
     }
     Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
+      console.log('resp',resp);
       return res.json({ user: createJson(resp) });
     }).catch(err=>{
       console.log("err",err)
