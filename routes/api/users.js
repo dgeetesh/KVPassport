@@ -94,6 +94,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
 router.post('/login', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
   const user = req.body;
+  console.log(user);
   if(!user.email) {
     return res.status(422).json({
       errors: {
@@ -112,6 +113,7 @@ router.post('/login', auth.optional, (req, res, next) => {
 
   return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
     if(err) {
+      console.log(err);
       return next(err);
     }
     if(passportUser) {
