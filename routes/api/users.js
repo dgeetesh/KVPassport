@@ -68,6 +68,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
     Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
       return res.json({ user: createJson(resp) });
     }).catch(err=>{
+      console.log("err",err)
       res.status(500)
     });
 
