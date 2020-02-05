@@ -13,7 +13,7 @@ var link='https://kvmobileapp.herokuapp.com/uploads/';
 //POST new user route (optional, everyone has access)
 
 //Register the user for the first time parameters includes (email,pass,firstname,lastname)
-router.post('/signup', auth.optional, (req, res, next) => {
+router.post('/userSignUp', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
   const user = req.body.userDetail;
   console.log('user signup body',user)
@@ -44,18 +44,39 @@ router.post('/signup', auth.optional, (req, res, next) => {
 //update the user for the domain parameters include(name,email,dob,domain)
 router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
-  const user = req.body;
+  if(req.body.registrationDetail){
 
-  if(!user.email || !user.firstName ||  !user.domain || !user.dob || !user._id || !user.phoneNumber ) {
+    const user = req.body.registrationDetail;
+
+    if(!user.domain || !user.dob || !user._id || !user.phoneNumber ) {
+      return res.status(422).json({
+        errors: 'All fields are required'
+            });
+    }
+    let updateValue = {
+      domain:user.domain,
+      dob:user.dob,
+      phoneNumber:user.phoneNumber,
+      domainRegistrationToggle:true,
+      profession:user.profession ? user.profession  : '',
+      category:user.category ? user.category : '',
+      schoolName:user.schoolName ? user.schoolName : '',
+      admissionYear:user.admissionYear ? user.admissionYear : '',
+      passingYear:user.passingYear ? user.passingYear : '',
+    }
+    Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
+      return res.json({ user: createJson(resp) });
+    }).catch(err=>{
+      res.status(500)
+    });
+
+  }else
+  {
     return res.status(422).json({
-      errors: 'All fields are required'
+      errors: 'Invalid Data'
           });
   }
-  Users.updateOne({_id:user._id},{$set:{domain:user.domain,dob:user.dob,phoneNumber:user.phoneNumber,userCommonToggle:true,domainRegistrationToggle:true}}).then(resp=>{
-    return res.json({ user: createJson(resp) });
-  }).catch(err=>{
-    res.status(500)
-  });
+  
 
 });
 
