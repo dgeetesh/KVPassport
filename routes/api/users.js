@@ -45,9 +45,9 @@ router.post('/userSignUp', auth.optional, (req, res, next) => {
 router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
   console.log('userDomianRegistration body',req.body)
-  if(req.body.registrationDetail){
+  if(req.body.UserDomainRegistration){
 
-    const user = req.body.registrationDetail;
+    const user = req.body.UserDomainRegistration;
 
     if(!user.domain || !user.dob || !user._id || !user.phoneNumber ) {
       return res.status(422).json({
