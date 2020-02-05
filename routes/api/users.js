@@ -66,8 +66,14 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
       passingYear:user.passingYear ? user.passingYear : '',
     }
     Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
-      console.log('resp',resp);
-      return res.status(200).json({msg:'Domain Registered Succesfully'});
+      console.log('resp',resp.nModified);
+      if(resp.nModified > 0) {
+        return res.status(200).json({msg:'Domain Registered Succesfully'});
+      }else
+      {
+        return res.status(500).json({msg:'Domain Registered UnSuccesfully'});
+      }
+      // return res.status(200).json({msg:'Domain Registered Succesfully'});
     }).catch(err=>{
       console.log("err",err)
       res.status(500)
