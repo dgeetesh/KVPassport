@@ -44,6 +44,7 @@ router.post('/userSignUp', auth.optional, (req, res, next) => {
 //update the user for the domain parameters include(name,email,dob,domain)
 router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
+  console.log('userDomianRegistration body',req.body)
   if(req.body.registrationDetail){
 
     const user = req.body.registrationDetail;
