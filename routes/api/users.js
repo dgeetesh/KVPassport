@@ -15,7 +15,7 @@ var link='https://kvmobileapp.herokuapp.com/uploads/';
 //Register the user for the first time parameters includes (email,pass,firstname,lastname)
 router.post('/signup', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
-  const user = req.body;
+  const user = req.body.userDetail;
   console.log('user signup body',user)
   if(!user.email) {
     return res.status(422).json({
