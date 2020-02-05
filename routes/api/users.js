@@ -273,4 +273,25 @@ return Users.findOne({fbUserId:fbUserId})
       return res.sendStatus(500);
   });
 });
+
+router.get('/getUserData',auth.required, (req, res, next) => {
+  const { payload: { id } } = req;
+  console.log(id);
+  if(id){
+    return Users.findOne({_id:id})
+    .then((userData) => {
+      console.log('userData',userData);
+      res.status(200).json({
+        user:createJson(userData)
+      });
+    });  
+
+  }else
+  {
+    return res.status(422).json({
+      errors: 'Invalid Data'
+          });
+  }
+
+});
 module.exports = router;
