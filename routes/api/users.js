@@ -250,8 +250,21 @@ let fbUserId =req.body.userID;
 return Users.findOne({fbUserId:fbUserId})
   .then((userData) => {
     if(userData) {
-      console.log('user availavble');
-      return res.json({ user: createJson(userData) });
+      let token=newUser.generateJWT();
+      console.log('user availavble token',token);
+      Users.updateOne({_id:user._id},{$set:{token:token}}).then(resp=>{
+        console.log('resp',resp.nModified);
+        if(resp.nModified > 0) {
+          return res.json({ user: createJson(userData) });
+        }else
+        {
+          return res.json({ user: createJson(userData) });
+        }
+        // return res.status(200).json({msg:'Domain Registered Succesfully'});
+      }).catch(err=>{
+        console.log("err",err)
+        res.status(500)
+      });
     }else
     {
       console.log('user unavailavble');
