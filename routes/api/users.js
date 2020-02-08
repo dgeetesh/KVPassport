@@ -252,7 +252,7 @@ return Users.findOne({fbUserId:fbUserId})
     if(userData) {
       let token=userData.generateJWT();
       console.log('user availavble token',token);
-      Users.updateOne({_id:user._id},{$set:{token:token}}).then(resp=>{
+      Users.updateOne({fbUserId:fbUserId},{$set:{token:token}}).then(resp=>{
         console.log('resp',resp.nModified);
         if(resp.nModified > 0) {
           return res.json({ user: createJson(userData) });
