@@ -264,8 +264,10 @@ return Users.findOne({fbUserId:fbUserId})
       newUser.lastName=req.body.userDetail.last_name ? req.body.userDetail.last_name : '' ;  
       newUser.userName=req.body.userDetail.name;
       // newUser.gender=req.body.gender;
+      newUser.token = newUser.generateJWT();
       newUser.profilePic=req.body.userDetail.profile_pic;
       newUser.email = req.body.userDetail.email ? req.body.userDetail.email : '';
+      console.log('newUser',newUser);
       const finalUser = new Users(newUser);
       finalUser.token = finalUser.generateJWT();
       return finalUser.save()
