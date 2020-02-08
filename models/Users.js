@@ -29,6 +29,7 @@ const UsersSchema = new Schema({
   fbToken:String,
   userCommonToggle:{type:Boolean,default:false},
   domainRegistrationToggle:{type:Boolean,default:false},
+  status:{type:String,default:'Online'}
 });
 
 // set password to user

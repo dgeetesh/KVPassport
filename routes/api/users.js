@@ -119,6 +119,7 @@ router.post('/login', auth.optional, (req, res, next) => {
     if(passportUser) {
       let userData = passportUser;
       userData.token = passportUser.generateJWT();
+      userData.status = 'Online';
       let logInUser = new Users(userData);
       logInUser.save()
         .then((resp) => {
@@ -280,6 +281,7 @@ return Users.findOne({fbUserId:fbUserId})
 router.get('/getUserData',auth.required, (req, res, next) => {
   const { payload: { id } } = req;
   console.log(id);
+  console.log('user payload ',req.session);
   if(id){
     return Users.findOne({_id:id})
     .then((userData) => {
@@ -288,6 +290,34 @@ router.get('/getUserData',auth.required, (req, res, next) => {
         user:createJson(userData)
       });
     });  
+
+  }else
+  {
+    return res.status(422).json({
+      errors: 'Invalid Data'
+          });
+  }
+
+});
+
+router.get('/logout',auth.required, function(req, res){
+  const { payload: { id } } = req;
+  console.log(id);
+  if(id){
+    Users.updateOne({_id:id},{$set:{status:'Offline'}}).then(resp=>{
+      console.log('resp',resp.nModified);
+      if(resp.nModified > 0) {
+        req.session.destroy();
+        return res.status(200).json({msg:'Successfully Logout'});
+      }else
+      {
+        return res.status(500).json({msg:'Error in Logout'});
+      }
+      // return res.status(200).json({msg:'Domain Registered Succesfully'});
+    }).catch(err=>{
+      console.log("err",err)
+      res.status(500)
+    });
 
   }else
   {
