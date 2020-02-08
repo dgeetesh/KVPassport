@@ -264,8 +264,9 @@ return Users.findOne({fbUserId:fbUserId})
       newUser.userName=req.body.userDetail.name;
       // newUser.gender=req.body.gender;
       newUser.profilePic=req.body.userDetail.profile_pic;
-      newUser.email = req.body.email ? req.body.email : '';
+      newUser.email = req.body.userDetail.email ? req.body.userDetail.email : '';
       const finalUser = new Users(newUser);
+      finalUser.token = finalUser.generateJWT();
       return finalUser.save()
         .then((resp) => res.json({ user:  createJson(resp)}));
     }
