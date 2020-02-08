@@ -76,7 +76,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
       // return res.status(200).json({msg:'Domain Registered Succesfully'});
     }).catch(err=>{
       console.log("err",err)
-      res.status(500)
+      res.status(500).json({error:'Format of Input field doesnt match '});
     });
 
   }else
