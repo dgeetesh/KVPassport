@@ -4,7 +4,7 @@ const router = require('express').Router();
 const auth = require('../auth');
 const checkCache = require('../../config/checkCache.js');
 const Users = mongoose.model('Users');
-const client = require('../../config/redis.js');
+// const client = require('../../config/redis.js');
 const createJson = require('../../config/createJson.js');
 const sharePost = mongoose.model('sharePost');
 var formidable = require('formidable');
@@ -123,9 +123,9 @@ router.post('/login', auth.optional, (req, res, next) => {
       let logInUser = new Users(userData);
       logInUser.save()
         .then((resp) => {
-          client.set(logInUser._id, JSON.stringify(resp), function(err, reply) {
+          // client.set(logInUser._id, JSON.stringify(resp), function(err, reply) {
             return res.json({ user: createJson(resp) });
-          });
+          // });
         }).catch(error=>{
           console.log('error',error);
         });
@@ -142,10 +142,10 @@ router.get('/current', auth.required,checkCache, (req, res, next) => {
       if(!user) {
         return res.sendStatus(400);
       }
-      client.set(user._id, JSON.stringify(user), function(err, reply) {
-        console.log(reply);
-        return res.json({ user: createJson(reply) });
-      });
+      // client.set(user._id, JSON.stringify(user), function(err, reply) {
+        // console.log(reply);
+        return res.json({ user: createJson(user) });
+      // });
     });
 });
 
