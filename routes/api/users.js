@@ -250,7 +250,7 @@ let fbUserId =req.body.userID;
 return Users.findOne({fbUserId:fbUserId})
   .then((userData) => {
     if(userData) {
-      let token=newUser.generateJWT();
+      let token=userData.generateJWT();
       console.log('user availavble token',token);
       Users.updateOne({_id:user._id},{$set:{token:token}}).then(resp=>{
         console.log('resp',resp.nModified);
