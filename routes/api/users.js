@@ -22,6 +22,7 @@ router.post('/userSignUp', auth.optional, (req, res, next) => {
       errors: {
         email: 'is required',
       },
+      status:422
     });
   }
 
@@ -30,6 +31,7 @@ router.post('/userSignUp', auth.optional, (req, res, next) => {
       errors: {
         password: 'is required',
       },
+      status:422
     });
   }
 
@@ -68,15 +70,15 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
     Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
       console.log('resp',resp.nModified);
       if(resp.nModified > 0) {
-        return res.status(200).json({msg:'Domain Registered Succesfully'});
+        return res.status(200).json({msg:'Domain Registered Succesfully',status:200});
       }else
       {
-        return res.status(500).json({msg:'Domain Registered UnSuccesfully'});
+        return res.status(500).json({msg:'Domain Registered UnSuccesfully',status:500});
       }
       // return res.status(200).json({msg:'Domain Registered Succesfully'});
     }).catch(err=>{
       console.log('err',err);
-      res.status(500).json({error:'Format of Input field doesnt match '});
+      res.status(500).json({error:'Format of Input field doesnt match ',status:500});
     });
 
   }else
@@ -99,6 +101,7 @@ router.post('/login', auth.optional, (req, res, next) => {
       errors: {
         email: 'is required',
       },
+      status:422
     });
   }
 
@@ -107,6 +110,7 @@ router.post('/login', auth.optional, (req, res, next) => {
       errors: {
         password: 'is required',
       },
+      status:422
     });
   }
 
@@ -123,10 +127,11 @@ router.post('/login', auth.optional, (req, res, next) => {
       logInUser.save()
         .then((resp) => {
           // client.set(logInUser._id, JSON.stringify(resp), function(err, reply) {
-          return res.json({ user: createJson(resp) });
+          return res.json({ user: createJson(resp) ,status:200});
           // });
         }).catch(error=>{
           console.log('error',error);
+          return res.json({ error: 'Something Went Wrong' ,status:500});
         });
     }
     // return status(400);
@@ -195,7 +200,7 @@ router.get('/getAllPosts', auth.required, (req, res, next) => {
       if(!sharePosData) {
         return res.sendStatus(400);
       }
-      return res.json({ user: sharePosData });
+      return res.json({ user: sharePosData,status:200 });
     }).catch(err=>{
       return res.sendStatus(500);
     });
@@ -220,7 +225,7 @@ router.post('/userComment', auth.required, (req, res, next) => {
         };
         sharePost.update({_id:postId},{$push:{comments:comment}}).then(resp=>{
           console.log(resp);
-          return res.json({ user: createJson(resp) });
+          return res.json({ user: createJson(resp),status:200 });
         }).catch(err=>{
           res.status(500);
         });
@@ -253,11 +258,11 @@ router.post('/facebookLogin', (req, res, next) => {
           console.log('resp',resp.nModified);
           return Users.findOne({fbUserId:fbUserId})
             .then((userDataM) => {
-              return res.json({ user: userDataM });
+              return res.json({ user: userDataM,status:200 });
             });
         }).catch(err=>{
           console.log('err',err);
-          res.status(500);
+          return res.json({ error: 'Something Went Wrong',status:500 });
         });
       }else
       {
@@ -278,12 +283,12 @@ router.post('/facebookLogin', (req, res, next) => {
         const finalUser = new Users(newUser);
         finalUser.token = finalUser.generateJWT();
         return finalUser.save()
-          .then((resp) => res.json({ user:  createJson(resp)}));
+          .then((resp) => res.json({ user:  createJson(resp),status:200}));
       }
       // return res.json({ user: user });
     }).catch(err=>{
       console.log(err);
-      return res.sendStatus(500);
+      return res.json({ error:'Something Went Wrong',status:200});
     });
 });
 
@@ -296,14 +301,15 @@ router.get('/getUserData',auth.required, (req, res, next) => {
       .then((userData) => {
         console.log('userData',userData);
         res.status(200).json({
-          user:createJson(userData)
+          user:createJson(userData),
+          status:200
         });
       });  
-
   }else
   {
     return res.status(422).json({
-      errors: 'Invalid Data'
+      errors: 'Invalid Data',
+      status:500
     });
   }
 
@@ -317,15 +323,15 @@ router.get('/logout',auth.required, function(req, res){
       console.log('resp',resp.nModified);
       if(resp.nModified > 0) {
         req.session.destroy();
-        return res.status(200).json({msg:'Success'});
+        return res.status(200).json({msg:'Success',status:200});
       }else
       {
-        return res.status(200).json({msg:'Success'});
+        return res.status(200).json({msg:'Success',status:200});
       }
       // return res.status(200).json({msg:'Domain Registered Succesfully'});
     }).catch(err=>{
       console.log('err',err);
-      res.status(500);
+      res.status(500).json({msg:'Something Went Wrong',status:500});
     });
 
   }else
