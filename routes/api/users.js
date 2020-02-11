@@ -251,16 +251,10 @@ router.post('/facebookLogin', (req, res, next) => {
         console.log('user availavble token',token);
         Users.updateOne({fbUserId:fbUserId},{$set:{fbToken:fbToken,token:token,status:'Online'}}).then(resp=>{
           console.log('resp',resp.nModified);
-          if(resp.nModified > 0) {
-            return Users.findOne({fbUserId:fbUserId})
-              .then((userDataM) => {
-                return res.json({ user: createJson(userDataM) });
-              });
-          }else
-          {
-            return res.json({ user: createJson(userData) });
-          }
-          // return res.status(200).json({msg:'Domain Registered Succesfully'});
+          return Users.findOne({fbUserId:fbUserId})
+            .then((userDataM) => {
+              return res.json({ user: createJson(userDataM) });
+            });
         }).catch(err=>{
           console.log('err',err);
           res.status(500);
