@@ -44,16 +44,16 @@ router.post('/userSignUp', auth.optional, (req, res, next) => {
 //update the user for the domain parameters include(name,email,dob,domain)
 router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
   // const { body: { user } } = req; 
-  console.log('userDomianRegistration body',req.body)
+  console.log('userDomianRegistration body',req.body);
   if(req.body.UserDomainRegistration){
 
     const user = req.body.UserDomainRegistration;
 
-    if(!user.domain || !user.dob || !user._id || !user.phoneNumber ) {
-      return res.status(422).json({
-        errors: 'All fields are required'
-            });
-    }
+    // if(!user.domain || !user.dob || !user._id || !user.phoneNumber ) {
+    //   return res.status(422).json({
+    //     errors: 'All fields are required'
+    //         });
+    // }
     let updateValue = {
       domain:user.domain,
       dob:user.dob,
@@ -299,7 +299,7 @@ router.get('/getUserData',auth.required, (req, res, next) => {
   console.log('user payload ',req.session);
   if(id){
     return Users.findOne({_id:id})
-    .then((userData) => {
+   .then((userData) => {
       console.log('userData',userData);
       res.status(200).json({
         user:createJson(userData)
@@ -310,7 +310,7 @@ router.get('/getUserData',auth.required, (req, res, next) => {
   {
     return res.status(422).json({
       errors: 'Invalid Data'
-          });
+    });
   }
 
 });
@@ -323,22 +323,22 @@ router.get('/logout',auth.required, function(req, res){
       console.log('resp',resp.nModified);
       if(resp.nModified > 0) {
         req.session.destroy();
-        return res.status(200).json({msg:'Successfully Logout'});
+        return res.status(200).json({msg:'Success'});
       }else
       {
-        return res.status(500).json({msg:'Error in Logout'});
+        return res.status(500).json({msg:'Failed'});
       }
       // return res.status(200).json({msg:'Domain Registered Succesfully'});
     }).catch(err=>{
-      console.log("err",err)
-      res.status(500)
+      console.log('err',err);
+      res.status(500);
     });
 
   }else
   {
     return res.status(422).json({
       errors: 'Invalid Data'
-          });
+    });
   }
 
 });
