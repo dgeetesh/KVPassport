@@ -252,7 +252,10 @@ router.post('/facebookLogin', (req, res, next) => {
         Users.updateOne({fbUserId:fbUserId},{$set:{fbToken:fbToken,token:token,status:'Online'}}).then(resp=>{
           console.log('resp',resp.nModified);
           if(resp.nModified > 0) {
-            return res.json({ user: createJson(userData) });
+            return Users.findOne({fbUserId:fbUserId})
+              .then((userDataM) => {
+                return res.json({ user: createJson(userDataM) });
+              });
           }else
           {
             return res.json({ user: createJson(userData) });
