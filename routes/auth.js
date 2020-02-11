@@ -8,7 +8,7 @@ const getTokenFromHeaders = (req) => {
   // if(authorization && authorization.split(' ')[0] === 'token') {
   //   return authorization.split(' ')[1];
   // }
-  if(authorization) {
+  if(authorization != null) {
     return authorization;
   }
   return null;
