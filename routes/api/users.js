@@ -75,7 +75,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
       }
       // return res.status(200).json({msg:'Domain Registered Succesfully'});
     }).catch(err=>{
-      console.log("err",err)
+      console.log("err",err);
       res.status(500).json({error:'Format of Input field doesnt match '});
     });
 
@@ -192,15 +192,14 @@ router.post('/uploadPost',auth.required, (req, res, next) => {
 router.get('/getAllPosts', auth.required, (req, res, next) => {
   const { payload: { id } } = req;
   return sharePost.find({userId:id})
-    .then((sharePost) => {
-      if(!sharePost) {
+    .then((sharePosData) => {
+      if(!sharePosData) {
         return res.sendStatus(400);
       }
-        return res.json({ user: sharePost });
+      return res.json({ user: sharePosData });
     }).catch(err=>{
-      console.log(reply);
       return res.sendStatus(500);
-  });
+    });
 });
 
 //POST current route (required, only authenticated users have access) comment in the post
@@ -325,7 +324,7 @@ router.get('/logout',auth.required, function(req, res){
         return res.status(200).json({msg:'Success'});
       }else
       {
-        return res.status(500).json({msg:'Failed'});
+        return res.status(200).json({msg:'Success'});
       }
       // return res.status(200).json({msg:'Domain Registered Succesfully'});
     }).catch(err=>{
