@@ -209,38 +209,36 @@ router.post('/userComment', auth.required, (req, res, next) => {
   const postId=req.body.postId;
   const commentText=req.body.comment;
   if(postId){
-  return sharePost.find({_id:postId})
-    .then((sharePostData) => {
-      if(!sharePostData) {
-        return res.sendStatus(400);
-      }
-      let comment= {
-        userId:id,
-        comments:commentText,
-        userName:'userName',
-        commentedOn:new Date()
-      };
-      sharePost.update({_id:postId},{$push:{comments:comment}}).then(resp=>{
-        console.log(resp);
-        return res.json({ user: createJson(resp) });
-      }).catch(err=>{
-        res.status(500)
-      });
+    return sharePost.find({_id:postId})
+      .then((sharePostData) => {
+        if(!sharePostData) {
+          return res.sendStatus(400);
+        }
+        let comment= {
+          userId:id,
+          comments:commentText,
+          userName:'userName',
+          commentedOn:new Date()
+        };
+        sharePost.update({_id:postId},{$push:{comments:comment}}).then(resp=>{
+          console.log(resp);
+          return res.json({ user: createJson(resp) });
+        }).catch(err=>{
+          res.status(500);
+        });
 
         return res.json({ user: sharePost });
-    }).catch(err=>{
-      console.log(err);
-      return res.sendStatus(500);
-  });
-  
-}else{
-  return res.status(422).json({
-    errors: {
-      postId: 'is required',
-    },
-  });
-    
-}
+      }).catch(err=>{
+        console.log(err);
+        return res.sendStatus(500);
+      });
+  }else{
+    return res.status(422).json({
+      errors: {
+        postId: 'is required',
+      },
+    });
+  }
 });
 
 router.post('/facebookLogin', (req, res, next) => {
@@ -252,7 +250,7 @@ router.post('/facebookLogin', (req, res, next) => {
       if(userData) {
         let token=userData.generateJWT();
         console.log('user availavble token',token);
-        Users.updateOne({fbUserId:fbUserId},{$set:{token:token,status:'Online'}}).then(resp=>{
+        Users.updateOne({fbUserId:fbUserId},{$set:{,fbToken:fbToken,token:token,status:'Online'}}).then(resp=>{
           console.log('resp',resp.nModified);
           if(resp.nModified > 0) {
             return res.json({ user: createJson(userData) });
