@@ -16,7 +16,7 @@ var link='https://kvmobileapp.herokuapp.com/uploads/';
 router.post('/userSignUp', auth.optional, (req, res, next) => {
   // const { body: { user } } = req;
   const user = req.body.userDetail;
-  console.log('user signup body',user)
+  console.log('user signup body',user);
   if(!user.email) {
     return res.status(422).json({
       errors: {
@@ -64,7 +64,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
       schoolName:user.schoolName ? user.schoolName : '',
       admissionYear:user.admissionYear ? user.admissionYear : '',
       passingYear:user.passingYear ? user.passingYear : '',
-    }
+    };
     Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
       console.log('resp',resp.nModified);
       if(resp.nModified > 0) {
@@ -75,7 +75,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
       }
       // return res.status(200).json({msg:'Domain Registered Succesfully'});
     }).catch(err=>{
-      console.log("err",err);
+      console.log('err',err);
       res.status(500).json({error:'Format of Input field doesnt match '});
     });
 
@@ -83,9 +83,8 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
   {
     return res.status(422).json({
       errors: 'Invalid Data'
-          });
+    });
   }
-  
 
 });
 
@@ -124,7 +123,7 @@ router.post('/login', auth.optional, (req, res, next) => {
       logInUser.save()
         .then((resp) => {
           // client.set(logInUser._id, JSON.stringify(resp), function(err, reply) {
-            return res.json({ user: createJson(resp) });
+          return res.json({ user: createJson(resp) });
           // });
         }).catch(error=>{
           console.log('error',error);
@@ -143,8 +142,8 @@ router.get('/current', auth.required,checkCache, (req, res, next) => {
         return res.sendStatus(400);
       }
       // client.set(user._id, JSON.stringify(user), function(err, reply) {
-        // console.log(reply);
-        return res.json({ user: createJson(user) });
+      // console.log(reply);
+      return res.json({ user: createJson(user) });
       // });
     });
 });
@@ -157,8 +156,8 @@ router.post('/uploadPost',auth.required, (req, res, next) => {
     form.parse(req, function (err, fields, files) {
       var oldpath = files.filetoupload.path;
       var newpath = './public/uploads/' + files.filetoupload.name;
-      fs.rename(oldpath, newpath, function (err) {
-        if (err)  console.log(err);
+      fs.rename(oldpath, newpath, function (error) {
+        if (error)  {console.log(error);}
         return Users.findById(id)
           .then((user) => {
             if(!user) {
@@ -246,6 +245,7 @@ router.post('/facebookLogin', (req, res, next) => {
   let fbUserId =req.body.userID;
   return Users.findOne({fbUserId:fbUserId})
     .then((userData) => {
+      console.log('userData',userData);
       if(userData) {
         let token=userData.generateJWT();
         console.log('user availavble token',token);
@@ -253,7 +253,7 @@ router.post('/facebookLogin', (req, res, next) => {
           console.log('resp',resp.nModified);
           return Users.findOne({fbUserId:fbUserId})
             .then((userDataM) => {
-              return res.json({ user: createJson(userDataM) });
+              return res.json({ user: userDataM });
             });
         }).catch(err=>{
           console.log('err',err);
