@@ -25,7 +25,6 @@ const UsersSchema = new Schema({
   schoolName:String,
   admissionYear:Date,
   passingYear:Date,
-  phoneNumber:Number,
   fbToken:String,
   userCommonToggle:{type:Boolean,default:false},
   domainRegistrationToggle:{type:Boolean,default:false},

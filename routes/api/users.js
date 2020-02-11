@@ -244,53 +244,54 @@ router.post('/userComment', auth.required, (req, res, next) => {
 });
 
 router.post('/facebookLogin', (req, res, next) => {
-console.log('facebookLogin resp',req.body);
-let fbToken=req.body.accessToken;
-let fbUserId =req.body.userID;
-return Users.findOne({fbUserId:fbUserId})
-  .then((userData) => {
-    if(userData) {
-      let token=userData.generateJWT();
-      console.log('user availavble token',token);
-      Users.updateOne({fbUserId:fbUserId},{$set:{token:token,status:'Online'}}).then(resp=>{
-        console.log('resp',resp.nModified);
-        if(resp.nModified > 0) {
-          return res.json({ user: createJson(userData) });
-        }else
-        {
-          return res.json({ user: createJson(userData) });
-        }
-        // return res.status(200).json({msg:'Domain Registered Succesfully'});
-      }).catch(err=>{
-        console.log("err",err)
-        res.status(500)
-      });
-    }else
-    {
-      console.log('user unavailavble');
-      const newUser={};
-      newUser.fbToken=fbToken;
-      newUser.fbUserId=fbUserId;
-      // newUser.email=req.body.email;
-      // newUser.firstName=req.body.firstName;
-      newUser.firstName=req.body.userDetail.first_name ? req.body.userDetail.first_name : '' ;
-      newUser.lastName=req.body.userDetail.last_name ? req.body.userDetail.last_name : '' ;  
-      newUser.userName=req.body.userDetail.name;
-      // newUser.gender=req.body.gender;
-      newUser.token = newUser.generateJWT();
-      newUser.profilePic=req.body.userDetail.profile_pic;
-      newUser.email = req.body.userDetail.email ? req.body.userDetail.email : '';
-      console.log('newUser',newUser);
-      const finalUser = new Users(newUser);
-      finalUser.token = finalUser.generateJWT();
-      return finalUser.save()
-        .then((resp) => res.json({ user:  createJson(resp)}));
-    }
+  console.log('facebookLogin resp',req.body);
+  let fbToken=req.body.accessToken;
+  let fbUserId =req.body.userID;
+  return Users.findOne({fbUserId:fbUserId})
+    .then((userData) => {
+      if(userData) {
+        let token=userData.generateJWT();
+        console.log('user availavble token',token);
+        Users.updateOne({fbUserId:fbUserId},{$set:{token:token,status:'Online'}}).then(resp=>{
+          console.log('resp',resp.nModified);
+          if(resp.nModified > 0) {
+            return res.json({ user: createJson(userData) });
+          }else
+          {
+            return res.json({ user: createJson(userData) });
+          }
+          // return res.status(200).json({msg:'Domain Registered Succesfully'});
+        }).catch(err=>{
+          console.log('err',err);
+          res.status(500);
+        });
+      }else
+      {
+        console.log('user unavailavble');
+        const newUser={};
+        newUser.fbToken=fbToken;
+        newUser.fbUserId=fbUserId;
+        // newUser.email=req.body.email;
+        // newUser.firstName=req.body.firstName;
+        newUser.firstName=req.body.userDetail.first_name ? req.body.userDetail.first_name : '' ;
+        newUser.lastName=req.body.userDetail.last_name ? req.body.userDetail.last_name : '' ;  
+        newUser.userName=req.body.userDetail.name;
+        newUser.status='Online';
+        // newUser.gender=req.body.gender;
+        newUser.token = newUser.generateJWT();
+        newUser.profilePic=req.body.userDetail.profile_pic;
+        newUser.email = req.body.userDetail.email ? req.body.userDetail.email : '';
+        console.log('newUser',newUser);
+        const finalUser = new Users(newUser);
+        finalUser.token = finalUser.generateJWT();
+        return finalUser.save()
+          .then((resp) => res.json({ user:  createJson(resp)}));
+      }
       // return res.json({ user: user });
-  }).catch(err=>{
+    }).catch(err=>{
       console.log(err);
       return res.sendStatus(500);
-  });
+    });
 });
 
 router.get('/getUserData',auth.required, (req, res, next) => {
@@ -299,12 +300,12 @@ router.get('/getUserData',auth.required, (req, res, next) => {
   console.log('user payload ',req.session);
   if(id){
     return Users.findOne({_id:id})
-   .then((userData) => {
-      console.log('userData',userData);
-      res.status(200).json({
-        user:createJson(userData)
-      });
-    });  
+      .then((userData) => {
+        console.log('userData',userData);
+        res.status(200).json({
+          user:createJson(userData)
+        });
+      });  
 
   }else
   {
