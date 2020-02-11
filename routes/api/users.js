@@ -58,7 +58,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
     // }
     let updateValue = {
       domain:user.domain,
-      dob:user.dob,
+      dob:new Date(user.dob),
       phoneNumber:user.phoneNumber,
       domainRegistrationToggle:true,
       profession:user.profession ? user.profession  : '',
