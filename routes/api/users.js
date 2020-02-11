@@ -250,7 +250,7 @@ router.post('/facebookLogin', (req, res, next) => {
       if(userData) {
         let token=userData.generateJWT();
         console.log('user availavble token',token);
-        Users.updateOne({fbUserId:fbUserId},{$set:{,fbToken:fbToken,token:token,status:'Online'}}).then(resp=>{
+        Users.updateOne({fbUserId:fbUserId},{$set:{fbToken:fbToken,token:token,status:'Online'}}).then(resp=>{
           console.log('resp',resp.nModified);
           if(resp.nModified > 0) {
             return res.json({ user: createJson(userData) });
