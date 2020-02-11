@@ -272,7 +272,6 @@ router.post('/facebookLogin', (req, res, next) => {
         newUser.userName=req.body.userDetail.name;
         newUser.status='Online';
         // newUser.gender=req.body.gender;
-        newUser.token = newUser.generateJWT();
         newUser.profilePic=req.body.userDetail.profile_pic;
         newUser.email = req.body.userDetail.email ? req.body.userDetail.email : '';
         console.log('newUser',newUser);
