@@ -51,11 +51,11 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
 
     const user = req.body.UserDomainRegistration;
 
-    // if(!user.domain || !user.dob || !user._id || !user.phoneNumber ) {
-    //   return res.status(422).json({
-    //     errors: 'All fields are required'
-    //         });
-    // }
+    if(!user.domain || !user.dob || !user._id || !user.phoneNumber ) {
+      return res.status(422).json({
+        errors: 'All fields are required'
+            });
+    }
     let updateValue = {
       domain:user.domain,
       dob:new Date(user.dob),
