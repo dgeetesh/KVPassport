@@ -67,6 +67,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
       admissionYear:user.admissionYear ? user.admissionYear : '',
       passingYear:user.passingYear ? user.passingYear : '',
     };
+    console.log('updateValue',updateValue);
     Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
       console.log('resp',resp.nModified);
       if(resp.nModified > 0) {
