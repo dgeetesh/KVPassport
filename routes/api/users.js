@@ -7,6 +7,7 @@ const Users = mongoose.model('Users');
 // const client = require('../../config/redis.js');
 const createJson = require('../../config/createJson.js');
 const sharePost = mongoose.model('sharePost');
+const slideShow = mongoose.model('slideShow');
 var formidable = require('formidable');
 var fs = require('fs');
 var link='https://kvmobileapp.herokuapp.com/uploads/';
@@ -54,7 +55,7 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
     if(!user.domain || !user.dob || !user._id || !user.phoneNumber ) {
       return res.status(422).json({
         errors: 'All fields are required'
-            });
+      });
     }
     let updateValue = {
       domain:user.domain,
@@ -345,7 +346,7 @@ router.get('/logout',auth.required, function(req, res){
 });
 
 router.get('/slideShow', function(req, res){
-  Users.find().then(resp=>{
+  slideShow.find().then(resp=>{
     console.log('resp',resp);
     if(resp.length > 0) {
       return res.status(200).json({slideShow:resp,status:200});
