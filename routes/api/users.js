@@ -353,7 +353,12 @@ router.get('/commonPage', function(req, res){
   let findHotLinks = hotLinks.find();
   Promise.all([findSlideshow,findachievers,findHotLinks]).then(function(values) {
     console.log(values);
-    return res.status(200).json({commonPage:values,status:200});
+    let commonPage={
+      slideShow:values[0],
+      achievers:values[1],
+      hotLinks:values[2],
+    }
+    return res.status(200).json({commonPage:commonPage,status:200});
   }).catch(err=>{
     console.log('err',err);
     res.status(500).json({msg:'Something Went Wrong',status:500});
