@@ -51,6 +51,7 @@ mongoose.set('debug', true);
 //Models & routes
 require('./models/Users');
 require('./models/sharePosts');
+require('./models/slideShows');
 require('./config/passport');
 app.use(require('./routes'));
 
