@@ -8,6 +8,8 @@ const Users = mongoose.model('Users');
 const createJson = require('../../config/createJson.js');
 const sharePost = mongoose.model('sharePost');
 const slideShow = mongoose.model('slideShow');
+const achievers =  mongoose.model('achievers');
+const hotLinks = mongoose.model('hotLinks');
 var formidable = require('formidable');
 var fs = require('fs');
 var link='https://kvmobileapp.herokuapp.com/uploads/';
@@ -345,19 +347,26 @@ router.get('/logout',auth.required, function(req, res){
 
 });
 
-router.get('/slideShow', function(req, res){
-  slideShow.find().then(resp=>{
-    console.log('resp',resp);
-    if(resp.length > 0) {
-      return res.status(200).json({slideShow:resp,status:200});
-    }else
-    {
-      return res.status(500).json({msg:'Data Not Found',status:400});
-    }
-    // return res.status(200).json({msg:'Domain Registered Succesfully'});
-  }).catch(err=>{
-    console.log('err',err);
-    res.status(500).json({msg:'Something Went Wrong',status:500});
+router.get('/commonPage', function(req, res){
+  // slideShow.find().then(resp=>{
+  //   console.log('resp',resp);
+  //   if(resp.length > 0) {
+  //     return res.status(200).json({slideShow:resp,status:200});
+  //   }else
+  //   {
+  //     return res.status(500).json({msg:'Data Not Found',status:400});
+  //   }
+  //   // return res.status(200).json({msg:'Domain Registered Succesfully'});
+  // }).catch(err=>{
+  //   console.log('err',err);
+  //   res.status(500).json({msg:'Something Went Wrong',status:500});
+  // });
+  let findSlideshow= slideShow.find();
+  let findachievers = achievers.find();
+  let findHotLinks = hotLinks.find();
+  Promise.all([findSlideshow,findachievers,findHotLinks]).then(function(values) {
+    console.log(values);
+    return res.status(200).json({slideShow:values,status:200});
   });
 });
 module.exports = router;
