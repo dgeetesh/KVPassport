@@ -74,6 +74,10 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
     Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
       console.log('resp',resp.nModified);
       if(resp.nModified > 0) {
+        // return Users.findOne({_id:user._id})
+        //   .then((userDataM) => {
+        //     return res.status(200).json({ user: userDataM,status:200 });
+        //   });
         return res.status(200).json({msg:'Domain Registered Succesfully',status:200});
       }else
       {
@@ -357,7 +361,7 @@ router.get('/commonPage', function(req, res){
       slideShow:values[0],
       achievers:values[1],
       hotLinks:values[2],
-    }
+    };
     return res.status(200).json({commonPage:commonPage,status:200});
   }).catch(err=>{
     console.log('err',err);
