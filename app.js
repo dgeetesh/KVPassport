@@ -39,9 +39,9 @@ if(!isProduction) {
 
 
 //Configure Mongoose
-// const uri = "mongodb+srv://kvuser:20209090geetesh@cluster0-uwtje.mongodb.net/test?retryWrites=true&w=majority";
+const uri = 'mongodb+srv://kvuser:20209090geetesh@cluster0-uwtje.mongodb.net/test?retryWrites=true&w=majority';
 
-const uri = "mongodb://localhost:27017/passportDB";
+// const uri = "mongodb://localhost:27017/passportDB";
 mongoose.connect(uri);
 // mongoose.error(err=>{
 //   console.log('mongodb error');
