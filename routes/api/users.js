@@ -73,16 +73,16 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
     console.log('updateValue',updateValue);
     Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
       console.log('resp',resp.nModified);
-      if(resp.nModified > 0) {
-        // return Users.findOne({_id:user._id})
-        //   .then((userDataM) => {
-        //     return res.status(200).json({ user: userDataM,status:200 });
-        //   });
-        return res.status(200).json({msg:'Domain Registered Succesfully',status:200});
-      }else
-      {
-        return res.status(500).json({msg:'Domain Registered UnSuccesfully',status:500});
-      }
+      // if(resp.nModified > 0) {
+        return Users.findOne({_id:user._id})
+          .then((userDataM) => {
+            return res.status(200).json({ user: userDataM,status:200 });
+          });
+        // return res.status(200).json({msg:'Domain Registered Succesfully',status:200});
+      // }else
+      // {
+      //   return res.status(500).json({msg:'Domain Registered UnSuccesfully',status:500});
+      // }
       // return res.status(200).json({msg:'Domain Registered Succesfully'});
     }).catch(err=>{
       console.log('err',err);
