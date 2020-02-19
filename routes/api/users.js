@@ -374,6 +374,7 @@ router.post('/searchFilterForCochings', function(req, res){
   let address=req.body;
   console.log(address);
   cochings.find({}).then(function(allData) {
+    console.log('allData',JSON.stringify(allData));
     let currentCityData=allData.filter(a=>{a.address.city.toLowerCase() == address.city.toLowerCase()});
     let restCityData=allData.filter(a=>{a.address.city.toLowerCase() != address.city.toLowerCase()});
     console.log('currentCityData',currentCityData);
