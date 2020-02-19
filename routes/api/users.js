@@ -373,7 +373,7 @@ router.get('/commonPage', function(req, res){
 router.post('/searchFilterForCochings', function(req, res){
   let address=req.body;
   console.log(address);
-  cochings.findOne({$or:[{'address.city':new RegExp(address.city)}]}).then(function(values) {
+  cochings.find({$or:[{'address.city':new RegExp(address.city,'i')}]}).then(function(values) {
     console.log(values);
     return res.status(200).json({commonPage:values,status:200});
   }).catch(err=>{
