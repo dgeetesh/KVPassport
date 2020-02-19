@@ -55,6 +55,7 @@ require('./models/slideShows');
 require('./models/achievers');
 require('./models/hotLinks');
 require('./config/passport');
+require('./models/cochings');
 app.use(require('./routes'));
 
 //Error handlers & middlewares

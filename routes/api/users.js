@@ -9,6 +9,7 @@ const createJson = require('../../config/createJson.js');
 const sharePost = mongoose.model('sharePost');
 const slideShow = mongoose.model('slideShow');
 const achievers =  mongoose.model('achievers');
+const cochings =  mongoose.model('cochings');
 const hotLinks = mongoose.model('hotLinks');
 var formidable = require('formidable');
 var fs = require('fs');
@@ -281,7 +282,7 @@ router.post('/facebookLogin', (req, res, next) => {
         // newUser.email=req.body.email;
         // newUser.firstName=req.body.firstName;
         newUser.firstName=req.body.userDetail.first_name ? req.body.userDetail.first_name : '' ;
-        newUser.lastName=req.body.userDetail.last_name ? req.body.userDetail.last_name : '' ;  
+        newUser.lastName=req.body.userDetail.last_name ? req.body.userDetail.last_name : '' ;
         newUser.userName=req.body.userDetail.name;
         newUser.status='Online';
         // newUser.gender=req.body.gender;
@@ -363,6 +364,18 @@ router.get('/commonPage', function(req, res){
       hotLinks:values[2],
     };
     return res.status(200).json({commonPage:commonPage,status:200});
+  }).catch(err=>{
+    console.log('err',err);
+    res.status(500).json({msg:'Something Went Wrong',status:500});
+  });
+});
+
+router.post('/searchFilterForCochings', function(req, res){
+  let address=req.body;
+  console.log(address);
+  cochings.findOne({$or:[{'address.city':new RegExp(address.city)}]}).then(function(values) {
+    console.log(values);
+    return res.status(200).json({commonPage:values,status:200});
   }).catch(err=>{
     console.log('err',err);
     res.status(500).json({msg:'Something Went Wrong',status:500});
