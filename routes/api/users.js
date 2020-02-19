@@ -13,6 +13,7 @@ const cochings =  mongoose.model('cochings');
 const hotLinks = mongoose.model('hotLinks');
 var formidable = require('formidable');
 var fs = require('fs');
+var _ = require('lodash');
 var link='https://kvmobileapp.herokuapp.com/uploads/';
 //POST new user route (optional, everyone has access)
 
@@ -390,8 +391,11 @@ router.post('/searchFilterForCochings', function(req, res){
     console.log('currentCityData',JSON.stringify(currentCityData));
     console.log('restCityData',JSON.stringify(restCityData));
     let allSortedData=[...currentCityData,restCityData];
+    let sortedData=_.flatten(allSortedData);
     console.log('allSortedData',JSON.stringify(allSortedData));
-    return res.status(200).json({commonPage:allSortedData,status:200});
+    console.log('sortedData',JSON.stringify(sortedData));
+
+    return res.status(200).json({commonPage:sortedData,status:200});
 
   }).catch(err=>{
     console.log('err',err);
