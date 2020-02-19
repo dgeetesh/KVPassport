@@ -358,7 +358,7 @@ router.get('/commonPage', function(req, res){
   let findachievers = achievers.find();
   let findHotLinks = hotLinks.find();
   Promise.all([findSlideshow,findachievers,findHotLinks]).then(function(values) {
-    console.log(values);
+    console.log(JSON.stringify(values));
     let commonPage={
       slideShow:values[0],
       achievers:values[1],
