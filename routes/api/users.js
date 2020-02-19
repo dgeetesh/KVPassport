@@ -373,11 +373,9 @@ router.get('/commonPage', function(req, res){
 
 router.post('/searchFilterForCochings', function(req, res){
   let address=req.body;
-  console.log(address);
   cochings.find({}).then(function(allData) {
-    console.log('allData',JSON.stringify(allData));
     let currentCityData=allData.filter(a=>{
-      if(a.address.city.toLowerCase() === address.city.toLowerCase())
+      if(a.address.city.toLowerCase() === address.city.toLowerCase() && a.address.state.toLowerCase() === address.state.toLowerCase())
       {
         return a;
       }
@@ -388,25 +386,13 @@ router.post('/searchFilterForCochings', function(req, res){
         return a;
       }
     });
-    console.log('currentCityData',JSON.stringify(currentCityData));
-    console.log('restCityData',JSON.stringify(restCityData));
     let allSortedData=[...currentCityData,restCityData];
     let sortedData=_.flatten(allSortedData);
-    console.log('allSortedData',JSON.stringify(allSortedData));
-    console.log('sortedData',JSON.stringify(sortedData));
-
     return res.status(200).json({commonPage:sortedData,status:200});
 
   }).catch(err=>{
     console.log('err',err);
     res.status(500).json({msg:'Something Went Wrong',status:500});
   });
-  // cochings.find({$or:[{'address.city':new RegExp(address.city,'i')}]}).then(function(values) {
-  //   console.log(values);
-  //   return res.status(200).json({commonPage:values,status:200});
-  // }).catch(err=>{
-  //   console.log('err',err);
-  //   res.status(500).json({msg:'Something Went Wrong',status:500});
-  // });
 });
 module.exports = router;

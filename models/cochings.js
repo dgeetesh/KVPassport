@@ -5,7 +5,8 @@ const cochingsSchema = new Schema({
 // key: 'k1',
   address:{
     city:String,
-    country:String
+    country:String,
+    state:String,
   },
   title: String,
   subTitle:String,
