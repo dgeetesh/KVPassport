@@ -382,7 +382,7 @@ router.post('/searchFilterForCochings', function(req, res){
 
   cochings.find({}).then(function(allData) {
     let currentCityData=allData.filter(a=>{
-      if(a.address.city.toLowerCase() === address.city.toLowerCase() && a.address.state.toLowerCase() === address.state.toLowerCase())
+      if(a.address.city.toLowerCase() === address.city.toLowerCase() && a.address.state ? a.address.state.toLowerCase() : a.address.state === address.state.toLowerCase())
       {
         return a;
       }
