@@ -381,11 +381,17 @@ router.post('/searchFilterForCochings', function(req, res){
         return a;
       }
     });
-    let restCityData=allData.filter(a=>{a.address.city.toLowerCase() != address.city.toLowerCase()});
+    let restCityData=allData.filter(a=>{
+      if(a.address.city.toLowerCase() !== address.city.toLowerCase())
+      {
+        return a;
+      }
+    });
     console.log('currentCityData',JSON.stringify(currentCityData));
-    console.log('restCityData',restCityData);
+    console.log('restCityData',JSON.stringify(restCityData));
     let allSortedData=[...currentCityData,restCityData];
-        return res.status(200).json({commonPage:allSortedData,status:200});
+    console.log('allSortedData',JSON.stringify(allSortedData));
+    return res.status(200).json({commonPage:allSortedData,status:200});
 
   }).catch(err=>{
     console.log('err',err);
