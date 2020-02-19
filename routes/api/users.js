@@ -373,6 +373,13 @@ router.get('/commonPage', function(req, res){
 
 router.post('/searchFilterForCochings', function(req, res){
   let address=req.body;
+
+  if(!address.city || !address.state ) {
+    return res.status(422).json({
+      errors: 'All fields are required'
+    });
+  }
+
   cochings.find({}).then(function(allData) {
     let currentCityData=allData.filter(a=>{
       if(a.address.city.toLowerCase() === address.city.toLowerCase() && a.address.state.toLowerCase() === address.state.toLowerCase())
