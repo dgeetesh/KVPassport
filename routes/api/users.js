@@ -382,7 +382,7 @@ router.post('/searchFilterForCochings', function(req, res){
       }
     });
     let restCityData=allData.filter(a=>{a.address.city.toLowerCase() != address.city.toLowerCase()});
-    console.log('currentCityData',currentCityData);
+    console.log('currentCityData',JSON.stringify(currentCityData));
     console.log('restCityData',restCityData);
     let allSortedData=[...currentCityData,restCityData];
         return res.status(200).json({commonPage:allSortedData,status:200});
