@@ -45,7 +45,7 @@ router.post('/userSignUp', auth.optional, (req, res, next) => {
   finalUser.setPassword(user.password);
 
   return finalUser.save()
-    .then(() => res.json({ user: createJson(finalUser) }));
+    .then(() => res.json({ user: createJson(finalUser),status:200 }));
 });
 
 //update the user for the domain parameters include(name,email,dob,domain)
