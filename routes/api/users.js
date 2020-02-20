@@ -10,6 +10,8 @@ const sharePost = mongoose.model('sharePost');
 const slideShow = mongoose.model('slideShow');
 const achievers =  mongoose.model('achievers');
 const cochings =  mongoose.model('cochings');
+const college =  mongoose.model('college');
+const activities =  mongoose.model('activities');
 const hotLinks = mongoose.model('hotLinks');
 var formidable = require('formidable');
 var fs = require('fs');
@@ -369,6 +371,37 @@ router.get('/commonPage', function(req, res){
     res.status(500).json({msg:'Something Went Wrong',status:500});
   });
 });
+
+router.post('/dataFordomain', function(req, res){
+  let domain=req.body;
+  let pArr=[];
+  let domainkey;
+  if(domain === 'SCH'){
+    domainkey='college';
+    pArr.push(cochings.find());
+    pArr.push(activities.find());
+    pArr.push(college.find());
+  }else if(domain === 'COl'){
+    domainkey='jobPrefrence';
+    pArr.push(cochings.find());
+    pArr.push(activities.find());
+    pArr.push(sharePost.find({tag:'job'}));
+
+  }
+
+  Promise.all(pArr).then(function(values) {
+    let domainData={
+      cochings:values[0],
+      activities:values[1],
+      [domainkey]:values[2],
+    };
+    return res.status(200).json({domainData:domainData,status:200});
+  }).catch(err=>{
+    console.log('err',err);
+    res.status(500).json({msg:'Something Went Wrong',status:500});
+  });
+});
+
 
 router.post('/searchFilterForCochings', function(req, res){
   let address=req.body;
