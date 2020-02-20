@@ -382,12 +382,18 @@ router.post('/dataFordomain', function(req, res){
     pArr.push(cochings.find());
     pArr.push(activities.find());
     pArr.push(college.find());
-  }else if(domain === 'COL'){
+  }else if(domain === 'CLG'){
     domainkey='jobPrefrence';
     pArr.push(cochings.find());
     pArr.push(activities.find());
     pArr.push(sharePost.find({tag:'job'}));
   }
+  // else if(domain === 'WRK' || domain === 'PRF'){
+  //   domainkey='jobPrefrence';
+  //   pArr.push(cochings.find());
+  //   pArr.push(activities.find());
+  //   pArr.push(sharePost.find({tag:'job'}));
+  // }
 
   Promise.all(pArr).then(function(values) {
     let domainData={
