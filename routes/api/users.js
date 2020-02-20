@@ -382,7 +382,7 @@ router.post('/dataFordomain', function(req, res){
     pArr.push(cochings.find());
     pArr.push(activities.find());
     pArr.push(college.find());
-  }else if(domain === 'CO'){
+  }else if(domain === 'COL'){
     domainkey='jobPrefrence';
     pArr.push(cochings.find());
     pArr.push(activities.find());
