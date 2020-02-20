@@ -373,7 +373,8 @@ router.get('/commonPage', function(req, res){
 });
 
 router.post('/dataFordomain', function(req, res){
-  let domain=req.body;
+  let domain=req.body.domain;
+  console.log(domain);
   let pArr=[];
   let domainkey;
   if(domain === 'SCH'){
@@ -395,6 +396,8 @@ router.post('/dataFordomain', function(req, res){
       activities:values[1],
       [domainkey]:values[2],
     };
+    console.log(domainData);
+    console.log('domainData',domainData);
     return res.status(200).json({domainData:domainData,status:200});
   }).catch(err=>{
     console.log('err',err);
