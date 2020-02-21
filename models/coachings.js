@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const cochingsSchema = new Schema({
+const coachingsSchema = new Schema({
 // key: 'k1',
   address:{
     city:String,
@@ -20,4 +20,4 @@ const cochingsSchema = new Schema({
 });
 
 
-mongoose.model('cochings', cochingsSchema,'cochings');
+mongoose.model('coachings', coachingsSchema,'coachings');

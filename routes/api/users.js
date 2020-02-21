@@ -6,10 +6,11 @@ const checkCache = require('../../config/checkCache.js');
 const Users = mongoose.model('Users');
 // const client = require('../../config/redis.js');
 const createJson = require('../../config/createJson.js');
+const SortData = require('../../config/functions.js')
 const sharePost = mongoose.model('sharePost');
 const slideShow = mongoose.model('slideShow');
 const achievers =  mongoose.model('achievers');
-const cochings =  mongoose.model('cochings');
+const coachings =  mongoose.model('coachings');
 const college =  mongoose.model('college');
 const activities =  mongoose.model('activities');
 const hotLinks = mongoose.model('hotLinks');
@@ -379,25 +380,25 @@ router.post('/dataFordomain', function(req, res){
   let domainkey;
   if(domain === 'SCH'){
     domainkey='college';
-    pArr.push(cochings.find());
+    pArr.push(coachings.find());
     pArr.push(activities.find());
     pArr.push(college.find());
   }else if(domain === 'CLG'){
     domainkey='jobPrefrence';
-    pArr.push(cochings.find());
+    pArr.push(coachings.find());
     pArr.push(activities.find());
     pArr.push(sharePost.find({tag:'job'}));
   }
   // else if(domain === 'WRK' || domain === 'PRF'){
   //   domainkey='jobPrefrence';
-  //   pArr.push(cochings.find());
+  //   pArr.push(coachings.find());
   //   pArr.push(activities.find());
   //   pArr.push(sharePost.find({tag:'job'}));
   // }
 
   Promise.all(pArr).then(function(values) {
     let domainData={
-      cochings:values[0],
+      coachings:values[0],
       activities:values[1],
       [domainkey]:values[2],
     };
@@ -411,7 +412,7 @@ router.post('/dataFordomain', function(req, res){
 });
 
 
-router.post('/searchFilterForCochings', function(req, res){
+router.post('/searchFilterForCoachings', function(req, res){
   let address=req.body;
 
   if(!address.city || !address.state ) {
@@ -420,7 +421,7 @@ router.post('/searchFilterForCochings', function(req, res){
     });
   }
 
-  cochings.find({}).then(function(allData) {
+  coachings.find({}).then(function(allData) {
     let currentCityData=allData.filter(a=>{
       if(a.address.city.toLowerCase() === address.city.toLowerCase() && a.address.state ? a.address.state.toLowerCase() : a.address.state === address.state.toLowerCase())
       {
@@ -436,7 +437,6 @@ router.post('/searchFilterForCochings', function(req, res){
     let allSortedData=[...currentCityData,restCityData];
     let sortedData=_.flatten(allSortedData);
     return res.status(200).json({commonPage:sortedData,status:200});
-
   }).catch(err=>{
     console.log('err',err);
     res.status(500).json({msg:'Something Went Wrong',status:500});
