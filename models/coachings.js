@@ -3,21 +3,22 @@ const Schema = mongoose.Schema;
 
 const coachingsSchema = new Schema({
 // key: 'k1',
-  address:{
-    city:String,
-    country:String,
-    state:String,
-  },
+  // address:{
+  //   city:String,
+  //   country:String,
+  //   state:String,
+  // },
+  // subTitle:String,
   title: String,
-  subTitle:String,
   image: String,
-  addmission:String,
-  fee: String,
-  coupon: String,
-  images: [],
-  amenities: [],
-  description:String
+  cochingList:[],
+  // addmission:String,
+  // fee: String,
+  // coupon: String,
+  // images: [],
+  // amenities: [],
+  // description:String
 });
 
 
-mongoose.model('coachings', coachingsSchema,'cochings');
+mongoose.model('coachings', coachingsSchema,'coachings');
