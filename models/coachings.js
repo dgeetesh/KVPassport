@@ -11,7 +11,7 @@ const coachingsSchema = new Schema({
   // subTitle:String,
   title: String,
   image: String,
-  coachingList:[],
+  coachingsList:[],
   // addmission:String,
   // fee: String,
   // coupon: String,
