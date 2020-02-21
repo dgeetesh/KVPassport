@@ -398,7 +398,7 @@ router.post('/dataFordomain', function(req, res){
 
   Promise.all(pArr).then(function(values) {
     let domainData={
-      coachings:{title:'Cricket',image:'https://kvmobileapp.herokuapp.com/assets/chat2.jpg',coachingsList:values[0]},
+      coachings:values[0],
       activities:values[1],
       [domainkey]:values[2],
     };
