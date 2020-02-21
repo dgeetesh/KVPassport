@@ -20,4 +20,4 @@ const coachingsSchema = new Schema({
 });
 
 
-mongoose.model('coachings', coachingsSchema,'coachings');
+mongoose.model('coachings', coachingsSchema,'cochings');
