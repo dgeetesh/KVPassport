@@ -11,13 +11,15 @@ const activitiesSchema = new Schema({
   title: String,
   image: String,
   activitiesList:[],
-  // subTitle:String,
+  subTitle:String,
+  booking: String,
+  description:String,
+  blog:String,
   // addmission:String,
   // fee: String,
   // coupon: String,
   // images: [],
   // amenities: [],
-  // description:String
 });
 
 

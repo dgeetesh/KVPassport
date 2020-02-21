@@ -383,6 +383,8 @@ router.post('/dataFordomain', function(req, res){
     pArr.push(coachings.find());
     pArr.push(activities.find());
     pArr.push(college.find());
+    pArr.push(hotLinks.find());
+    pArr.push(slideShow.find());
   }else if(domain === 'CLG'){
     domainkey='jobPrefrence';
     pArr.push(coachings.find());
@@ -401,6 +403,8 @@ router.post('/dataFordomain', function(req, res){
       coachings:values[0],
       activities:values[1],
       [domainkey]:values[2],
+      exams:values[3],
+      slideShow:values[4],
     };
     console.log(domainData);
     console.log('domainData',domainData);
