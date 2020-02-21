@@ -390,6 +390,8 @@ router.post('/dataFordomain', function(req, res){
     pArr.push(coachings.find());
     pArr.push(activities.find());
     pArr.push(sharePost.find({tag:'job'}));
+    pArr.push(hotLinks.find());
+    pArr.push(slideShow.find());
   }
   // else if(domain === 'WRK' || domain === 'PRF'){
   //   domainkey='jobPrefrence';
@@ -406,8 +408,7 @@ router.post('/dataFordomain', function(req, res){
       exams:values[3],
       slideShow:values[4],
     };
-    console.log(domainData);
-    console.log('domainData',domainData);
+    console.log('domainData',JSON.stringify(domainData));
     return res.status(200).json({domainData:domainData,status:200});
   }).catch(err=>{
     console.log('err',err);
