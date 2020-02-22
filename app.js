@@ -56,6 +56,7 @@ require('./models/achievers');
 require('./models/hotLinks');
 require('./config/passport');
 require('./models/coachings');
+require('./models/successStories');
 require('./models/college');
 require('./models/activities');
 app.use(require('./routes'));

@@ -14,6 +14,7 @@ const coachings =  mongoose.model('coachings');
 const college =  mongoose.model('college');
 const activities =  mongoose.model('activities');
 const hotLinks = mongoose.model('hotLinks');
+const successStories = mongoose.model('successStories');
 var formidable = require('formidable');
 var fs = require('fs');
 var _ = require('lodash');
@@ -378,34 +379,48 @@ router.post('/dataFordomain', function(req, res){
   console.log(domain);
   let pArr=[];
   let domainkey;
+  let domainkey1;
+  let domainkey2;
+  let domainkey3;
+  let domainkey4;
   if(domain === 'SCH'){
-    domainkey='college';
+    domainkey1='coachings';
+    domainkey2='activities';
+    domainkey3='college';
+    domainkey4='exams';
     pArr.push(coachings.find());
     pArr.push(activities.find());
     pArr.push(college.find());
     pArr.push(hotLinks.find());
-    pArr.push(slideShow.find());
+    // pArr.push(slideShow.find());
   }else if(domain === 'CLG'){
-    domainkey='jobPrefrence';
+    domainkey1='coachings';
+    domainkey2='activities';
+    domainkey3='jobPrefrence';
+    domainkey4='exams';
     pArr.push(coachings.find());
     pArr.push(activities.find());
     pArr.push(sharePost.find({tag:'job'}));
     pArr.push(hotLinks.find());
-    pArr.push(slideShow.find());
+    // pArr.push(slideShow.find());
   }
-  // else if(domain === 'WRK' || domain === 'PRF'){
-  //   domainkey='jobPrefrence';
-  //   pArr.push(coachings.find());
-  //   pArr.push(activities.find());
-  //   pArr.push(sharePost.find({tag:'job'}));
-  // }
-
+  else if(domain === 'WRK' || domain === 'PRF'){
+    domainkey1='successStories';
+    domainkey2='matrimony';
+    domainkey3='jobPrefrence';
+    domainkey4='activities';
+    pArr.push(successStories.find());
+    pArr.push(sharePost.find({tag:'matrimony'}));
+    pArr.push(sharePost.find({tag:'job'}));
+    pArr.push(activities.find());
+  }
+  pArr.push(slideShow.find());
   Promise.all(pArr).then(function(values) {
     let domainData={
-      coachings:values[0],
-      activities:values[1],
-      [domainkey]:values[2],
-      exams:values[3],
+      [domainkey1]:values[0],
+      [domainkey2]:values[1],
+      [domainkey3]:values[2],
+      [domainkey4]:values[3],
       slideShow:values[4],
     };
     console.log('domainData',JSON.stringify(domainData));
