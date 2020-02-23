@@ -45,6 +45,7 @@ router.post('/userSignUp', auth.optional, (req, res, next) => {
   }
 
   const finalUser = new Users(user);
+  finalUser.token = finalUser.generateJWT();
 
   finalUser.setPassword(user.password);
 
@@ -379,7 +380,6 @@ router.post('/dataFordomain', function(req, res){
   let domain=req.body.domain;
   console.log(domain);
   let pArr=[];
-  let domainkey;
   let domainkey1;
   let domainkey2;
   let domainkey3;
