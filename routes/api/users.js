@@ -340,6 +340,7 @@ router.get('/logout',auth.required, function(req, res){
         return res.status(200).json({msg:'Success',status:200});
       }else
       {
+        req.session.destroy();
         return res.status(200).json({msg:'Success',status:200});
       }
       // return res.status(200).json({msg:'Domain Registered Succesfully'});
