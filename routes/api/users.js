@@ -55,7 +55,6 @@ router.post('/userSignUp', auth.optional, (req, res, next) => {
 
 //update the user for the domain parameters include(name,email,dob,domain)
 router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
-  // const { body: { user } } = req; 
   console.log('userDomianRegistration body',req.body);
   if(req.body.UserDomainRegistration){
 
@@ -81,16 +80,10 @@ router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
     Users.updateOne({_id:user._id},{$set:updateValue}).then(resp=>{
       console.log('resp',resp.nModified);
       // if(resp.nModified > 0) {
-        return Users.findOne({_id:user._id})
-          .then((userDataM) => {
-            return res.status(200).json({ user: userDataM,status:200 });
-          });
-        // return res.status(200).json({msg:'Domain Registered Succesfully',status:200});
-      // }else
-      // {
-      //   return res.status(500).json({msg:'Domain Registered UnSuccesfully',status:500});
-      // }
-      // return res.status(200).json({msg:'Domain Registered Succesfully'});
+      return Users.findOne({_id:user._id})
+        .then((userDataM) => {
+          return res.status(200).json({ user: userDataM,status:200 });
+        });
     }).catch(err=>{
       console.log('err',err);
       res.status(500).json({error:'Format of Input field doesnt match ',status:500});
@@ -410,7 +403,7 @@ router.post('/dataFordomain', function(req, res){
     domainkey2='matrimony';
     domainkey3='jobPrefrence';
     domainkey4='activities';
-    pArr.push(successStories.find());
+    pArr.push(achievers.find());
     pArr.push(sharePost.find({tag:'matrimony'}));
     pArr.push(sharePost.find({tag:'job'}));
     pArr.push(activities.find());
