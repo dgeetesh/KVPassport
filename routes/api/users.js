@@ -141,6 +141,9 @@ router.post('/login', auth.optional, (req, res, next) => {
           console.log('error',error);
           return res.json({ error: 'Something Went Wrong' ,status:500});
         });
+    }else
+    {
+      return res.json({ error: 'Invalid Credentials' ,status:500});
     }
     // return status(400);
   })(req, res, next);
