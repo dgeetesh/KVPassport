@@ -16,6 +16,7 @@ const activities =  mongoose.model('activities');
 const hotLinks = mongoose.model('hotLinks');
 var formidable = require('formidable');
 var fs = require('fs');
+// eslint-disable-next-line no-unused-vars
 var _ = require('lodash');
 var link='https://kvmobileapp.herokuapp.com/uploads/';
 //POST new user route (optional, everyone has access)
@@ -165,13 +166,14 @@ router.get('/current', auth.required,checkCache, (req, res) => {
 
 
 //POST current route (required, only authenticated users have access) sharig post
-router.post('/uploadPost2',auth.optional, (req, res) => {
+router.post('/uploadPost2',auth.optional, (req) => {
   let postData=req.body;
   //  const base64Data=Base64.decode(req.image);
+  console.log('__dirname',__dirname);
   console.log('postData.image',postData.image);
   let buff = new Buffer(postData.image, 'base64');
   console.log(buff);
-  let timeStamp=new Date();
+  // let timeStamp=new Date();
   let fileName=`${'filenames'}`;
   fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
   //  if (err) throw err;
