@@ -32,6 +32,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({limit:'50MB'}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 },resave: false, saveUninitialized: false }));
+var serveStatic = require('serve-static');
+app.use('/public/', serveStatic(path.join(__dirname, '/public')));
 
 if(!isProduction) {
   app.use(errorHandler());
