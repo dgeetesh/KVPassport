@@ -6,7 +6,7 @@ const checkCache = require('../../config/checkCache.js');
 const Users = mongoose.model('Users');
 // const client = require('../../config/redis.js');
 const createJson = require('../../config/createJson.js');
-const SortData = require('../../config/functions.js')
+const SortData = require('../../config/functions.js');
 const sharePost = mongoose.model('sharePost');
 const slideShow = mongoose.model('slideShow');
 const achievers =  mongoose.model('achievers');
@@ -14,7 +14,6 @@ const coachings =  mongoose.model('coachings');
 const college =  mongoose.model('college');
 const activities =  mongoose.model('activities');
 const hotLinks = mongoose.model('hotLinks');
-const successStories = mongoose.model('successStories');
 var formidable = require('formidable');
 var fs = require('fs');
 var _ = require('lodash');
@@ -22,7 +21,7 @@ var link='https://kvmobileapp.herokuapp.com/uploads/';
 //POST new user route (optional, everyone has access)
 
 //Register the user for the first time parameters includes (email,pass,firstname,lastname)
-router.post('/userSignUp', auth.optional, (req, res, next) => {
+router.post('/userSignUp', auth.optional, (req, res) => {
   // const { body: { user } } = req;
   const user = req.body.userDetail;
   console.log('user signup body',user);
@@ -54,7 +53,7 @@ router.post('/userSignUp', auth.optional, (req, res, next) => {
 });
 
 //update the user for the domain parameters include(name,email,dob,domain)
-router.post('/userDomianRegistration', auth.optional, (req, res, next) => {
+router.post('/userDomianRegistration', auth.optional, (req, res) => {
   console.log('userDomianRegistration body',req.body);
   if(req.body.UserDomainRegistration){
 
@@ -122,7 +121,7 @@ router.post('/login', auth.optional, (req, res, next) => {
     });
   }
 
-  return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
+  return passport.authenticate('local', { session: false }, (err, passportUser) => {
     if(err) {
       console.log(err);
       return next(err);
@@ -150,7 +149,7 @@ router.post('/login', auth.optional, (req, res, next) => {
 });
 
 //GET current route (required, only authenticated users have access)
-router.get('/current', auth.required,checkCache, (req, res, next) => {
+router.get('/current', auth.required,checkCache, (req, res) => {
   const { payload: { id } } = req;
   return Users.findById(id)
     .then((user) => {
@@ -164,14 +163,14 @@ router.get('/current', auth.required,checkCache, (req, res, next) => {
     });
 });
 
-//POST current route (required, only authenticated users have access) sharig post 
-router.post('/uploadPost',auth.required, (req, res, next) => {
+//POST current route (required, only authenticated users have access) sharig post
+router.post('/uploadPost',auth.required, (req, res) => {
   const { payload: { id } } = req;
   if(id){
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
       var oldpath = files.filetoupload.path;
-      var newpath = './public/uploads/' + files.filetoupload.name;
+      var newpath = `./public/uploads/${files.filetoupload.name}`;
       fs.rename(oldpath, newpath, function (error) {
         if (error)  {console.log(error);}
         return Users.findById(id)
@@ -191,8 +190,8 @@ router.post('/uploadPost',auth.required, (req, res, next) => {
               .then((resp) => {
                 console.log('resp',resp);
                 return res.json({ user: createJson(resp) });
-              }).catch(err=>{
-                console.log('err',err);
+              }).catch(postErr=>{
+                console.log('postErr',postErr);
               });
           });
       });
@@ -204,7 +203,7 @@ router.post('/uploadPost',auth.required, (req, res, next) => {
 });
 
 //GET current route (required, only authenticated users have access) get all post
-router.get('/getAllPosts', auth.required, (req, res, next) => {
+router.get('/getAllPosts', auth.required, (req, res) => {
   const { payload: { id } } = req;
   return sharePost.find({userId:id})
     .then((sharePosData) => {
@@ -212,13 +211,14 @@ router.get('/getAllPosts', auth.required, (req, res, next) => {
         return res.sendStatus(400);
       }
       return res.json({ user: sharePosData,status:200 });
-    }).catch(err=>{
+    }).catch(getPosterr=>{
+      console.log('getPosterr',getPosterr);
       return res.sendStatus(500);
     });
 });
 
 //POST current route (required, only authenticated users have access) comment in the post
-router.post('/userComment', auth.required, (req, res, next) => {
+router.post('/userComment', auth.required, (req, res) => {
   const { payload: { id } } = req;
   const postId=req.body.postId;
   const commentText=req.body.comment;
@@ -237,10 +237,10 @@ router.post('/userComment', auth.required, (req, res, next) => {
         sharePost.update({_id:postId},{$push:{comments:comment}}).then(resp=>{
           console.log(resp);
           return res.json({ user: createJson(resp),status:200 });
-        }).catch(err=>{
+        }).catch(commentErr=>{
+          console.log('commentErr',commentErr);
           res.status(500);
         });
-
         return res.json({ user: sharePost });
       }).catch(err=>{
         console.log(err);
@@ -255,7 +255,7 @@ router.post('/userComment', auth.required, (req, res, next) => {
   }
 });
 
-router.post('/facebookLogin', (req, res, next) => {
+router.post('/facebookLogin', (req, res) => {
   console.log('facebookLogin resp',req.body);
   let fbToken=req.body.accessToken;
   let fbUserId =req.body.userID;
@@ -303,7 +303,7 @@ router.post('/facebookLogin', (req, res, next) => {
     });
 });
 
-router.get('/getUserData',auth.required, (req, res, next) => {
+router.get('/getUserData',auth.required, (req, res) => {
   const { payload: { id } } = req;
   console.log(id);
   console.log('user payload ',req.session);
@@ -315,7 +315,7 @@ router.get('/getUserData',auth.required, (req, res, next) => {
           user:createJson(userData),
           status:200
         });
-      });  
+      });
   }else
   {
     return res.status(422).json({
