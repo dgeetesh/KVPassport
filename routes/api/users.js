@@ -197,7 +197,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
         let buff = new Buffer(postData.image, 'base64');
         console.log(buff);
         let timeStamp=new Date();
-        let fileName=`${user.userName}${timeStamp}`;
+        let fileName=user.userName+timeStamp;
         fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
         //  if (err) throw err;
           console.log('Saved!',err);
