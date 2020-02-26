@@ -172,11 +172,11 @@ router.post('/uploadPost2',auth.optional, (req, res) => {
   let buff = new Buffer(postData.image, 'base64');
   console.log(buff);
   let timeStamp=new Date();
-  let fileName=`${timeStamp}`;
+  let fileName=`${'filenames'}`;
   fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
   //  if (err) throw err;
     console.log('Saved!',err);
-  })
+  });
 });
 
 
