@@ -166,6 +166,52 @@ router.get('/current', auth.required,checkCache, (req, res) => {
 //POST current route (required, only authenticated users have access) sharig post
 router.post('/uploadPost',auth.required, (req, res) => {
   const { payload: { id } } = req;
+  let postData=req.body;
+  console.log(id,postData,req.image);
+  if(postData.image){
+    return Users.findById(id)
+      .then((user) => {
+        if(!user) {
+          return res.sendStatus(400);
+        }
+        //  const base64Data=Base64.decode(req.image);
+        let buff = new Buffer.alloc(postData.image, 'base64');
+        console.log(buff);
+        let timeStamp=new Date();
+        let fileName=`${user.userName}${timeStamp}`;
+        fs.writeFile(`public/images/${fileName}`, buff,function(err){
+        //  if (err) throw err;
+          console.log('Saved!',err);
+        });
+        let share_post={};
+        share_post.posterName=`${user.userName ||''}`;
+        share_post.userId=user._id;
+        share_post.caption=postData.caption ? postData.caption : '' ;
+        share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '';
+        share_post.postedOn=timeStamp;
+        share_post.link=link+fileName;
+        var sharePostss=new sharePost(share_post);
+        sharePostss.save()
+          .then((resp) => {
+            console.log('resp',resp);
+            return res.json({ user: createJson(resp) });
+          }).catch(postErr=>{
+            console.log('postErr',postErr);
+          });
+      });
+
+  }else
+  {
+    return res.status(422).json({
+      errors: 'Invalid Data',
+      status:500
+    });
+  }
+});
+
+//POST current route (required, only authenticated users have access) sharig post
+router.post('/uploadPost1',auth.required, (req, res) => {
+  const { payload: { id } } = req;
   if(id){
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
