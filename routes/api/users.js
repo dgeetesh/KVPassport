@@ -163,6 +163,23 @@ router.get('/current', auth.required,checkCache, (req, res) => {
     });
 });
 
+
+//POST current route (required, only authenticated users have access) sharig post
+router.post('/uploadPost2',auth.optional, (req, res) => {
+  const { payload: { id } } = req;
+  let postData=req.body;
+  //  const base64Data=Base64.decode(req.image);
+  let buff = new Buffer.alloc(postData.image, 'base64');
+  console.log(buff);
+  let timeStamp=new Date();
+  let fileName=`${timeStamp}`;
+  fs.writeFile(`public/images/${fileName}`, buff,function(err){
+  //  if (err) throw err;
+    console.log('Saved!',err);
+  })
+});
+
+
 //POST current route (required, only authenticated users have access) sharig post
 router.post('/uploadPost',auth.required, (req, res) => {
   const { payload: { id } } = req;
