@@ -166,7 +166,6 @@ router.get('/current', auth.required,checkCache, (req, res) => {
 
 //POST current route (required, only authenticated users have access) sharig post
 router.post('/uploadPost2',auth.optional, (req, res) => {
-  const { payload: { id } } = req;
   let postData=req.body;
   //  const base64Data=Base64.decode(req.image);
   let buff = new Buffer.alloc(postData.image, 'base64');
