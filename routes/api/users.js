@@ -374,7 +374,9 @@ router.get('/commonPage', function(req, res){
 
 router.post('/dataFordomain', function(req, res){
   let domain=req.body.domain;
-  console.log(domain);
+  var city;
+  city=req.body.city ? req.body.city :'banglore' ;
+  console.log(domain,city);
   let pArr=[];
   let domainkey1;
   let domainkey2;
@@ -389,7 +391,6 @@ router.post('/dataFordomain', function(req, res){
     pArr.push(activities.find());
     pArr.push(college.find());
     pArr.push(hotLinks.find());
-    // pArr.push(slideShow.find());
   }else if(domain === 'CLG'){
     domainkey1='coachings';
     domainkey2='activities';
@@ -399,7 +400,6 @@ router.post('/dataFordomain', function(req, res){
     pArr.push(activities.find());
     pArr.push(sharePost.find({tag:'job'}));
     pArr.push(hotLinks.find());
-    // pArr.push(slideShow.find());
   }
   else if(domain === 'WRK' || domain === 'PRF'){
     domainkey1='successStories';
@@ -413,14 +413,20 @@ router.post('/dataFordomain', function(req, res){
   }
   pArr.push(slideShow.find());
   Promise.all(pArr).then(function(values) {
+    // let domainData={
+    //   [domainkey1]:values[0],
+    //   [domainkey2]:values[1],
+    //   [domainkey3]:values[2],
+    //   [domainkey4]:values[3],
+    //   slideShow:values[4],
+    // };
     let domainData={
-      [domainkey1]:values[0],
-      [domainkey2]:values[1],
-      [domainkey3]:values[2],
-      [domainkey4]:values[3],
+      [domainkey1]:SortData(city,values[0],domainkey1),
+      [domainkey2]:SortData(city,values[1],domainkey2),
+      [domainkey3]:SortData(city,values[2],domainkey3),
+      [domainkey4]:SortData(city,values[3],domainkey4),
       slideShow:values[4],
     };
-    console.log('domainData',JSON.stringify(domainData));
     return res.status(200).json({domainData:domainData,status:200});
   }).catch(err=>{
     console.log('err',err);
@@ -428,35 +434,4 @@ router.post('/dataFordomain', function(req, res){
   });
 });
 
-
-router.post('/searchFilterForCoachings', function(req, res){
-  let address=req.body;
-
-  if(!address.city || !address.state ) {
-    return res.status(422).json({
-      errors: 'All fields are required'
-    });
-  }
-
-  coachings.find({}).then(function(allData) {
-    let currentCityData=allData.filter(a=>{
-      if(a.address.city.toLowerCase() === address.city.toLowerCase() && a.address.state ? a.address.state.toLowerCase() : a.address.state === address.state.toLowerCase())
-      {
-        return a;
-      }
-    });
-    let restCityData=allData.filter(a=>{
-      if(a.address.city.toLowerCase() !== address.city.toLowerCase())
-      {
-        return a;
-      }
-    });
-    let allSortedData=[...currentCityData,restCityData];
-    let sortedData=_.flatten(allSortedData);
-    return res.status(200).json({commonPage:sortedData,status:200});
-  }).catch(err=>{
-    console.log('err',err);
-    res.status(500).json({msg:'Something Went Wrong',status:500});
-  });
-});
 module.exports = router;
