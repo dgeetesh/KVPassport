@@ -208,6 +208,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
         share_post.userId=user._id;
         share_post.caption=postData.caption ? postData.caption : '' ;
         share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '';
+        share_post.tag=postData.tag ? postData.tag : '';
         share_post.postedOn=timeStamp;
         share_post.link=link+fileName;
         var sharePostss=new sharePost(share_post);
