@@ -173,7 +173,7 @@ router.post('/uploadPost2',auth.optional, (req, res) => {
   console.log(buff);
   let timeStamp=new Date();
   let fileName=`${'filenames'}`;
-  fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
+  fs.writeFile(`./public/uploads/${fileName}`, buff,function(err){
   //  if (err) throw err;
     console.log('Saved!',err);
   });
@@ -196,7 +196,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
         console.log(buff);
         let timeStamp=new Date();
         let fileName=`${user.userName}${timeStamp}`;
-        fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
+        fs.writeFile(`./public/uploads/${fileName}`, buff,function(err){
         //  if (err) throw err;
           console.log('Saved!',err);
         });
