@@ -194,7 +194,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           return res.sendStatus(400);
         }
         //  const base64Data=Base64.decode(req.image);
-        let buff = new Buffer.alloc(postData.image, 'base64');
+        let buff = new Buffer(postData.image, 'base64');
         console.log(buff);
         let timeStamp=new Date();
         let fileName=`${user.userName}${timeStamp}`;
