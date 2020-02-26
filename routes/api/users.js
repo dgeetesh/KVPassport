@@ -16,6 +16,7 @@ const activities =  mongoose.model('activities');
 const hotLinks = mongoose.model('hotLinks');
 var formidable = require('formidable');
 var fs = require('fs');
+const moment=require('moment');
 // eslint-disable-next-line no-unused-vars
 var _ = require('lodash');
 var link='https://kvmobileapp.herokuapp.com/uploads/';
@@ -196,7 +197,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
         //  const base64Data=Base64.decode(req.image);
         let buff = new Buffer(postData.image, 'base64');
         console.log(buff);
-        let timeStamp=new Date();
+        let timeStamp=moment().format('YYYY-MM-DD HH:mm:ss');
         let fileName=user.userName+timeStamp;
         fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
         //  if (err) throw err;
