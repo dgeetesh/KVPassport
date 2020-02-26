@@ -173,7 +173,7 @@ router.post('/uploadPost2',auth.optional, (req, res) => {
   console.log(buff);
   let timeStamp=new Date();
   let fileName=`${'filenames'}`;
-  fs.writeFile(`./public/uploads/${fileName}`, buff,function(err){
+  fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
   //  if (err) throw err;
     console.log('Saved!',err);
   });
@@ -233,7 +233,7 @@ router.post('/uploadPost1',auth.required, (req, res) => {
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
       var oldpath = files.filetoupload.path;
-      var newpath = `./public/uploads/${files.filetoupload.name}`;
+      var newpath = `public/uploads/${files.filetoupload.name}`;
       fs.rename(oldpath, newpath, function (error) {
         if (error)  {console.log(error);}
         return Users.findById(id)
