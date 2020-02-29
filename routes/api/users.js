@@ -268,7 +268,7 @@ router.post('/uploadPost1',auth.required, (req, res) => {
     });
   }else
   {
-    return res.sendStatus(400);
+    return res.json({ error:'Data Not Found',status:400  });
   }
 });
 
