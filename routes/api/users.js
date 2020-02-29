@@ -295,7 +295,7 @@ router.post('/uploadPost3',auth.required, (req, res) => {
   if(id){
     upload(req, res, function (err) {
       console.log('req',req);
-      console.log('req.postData',req.body.postData);
+      console.log('req.postData',JSON.stringify(req.body.postData));
       console.log('req.body',req.body);
       console.log('req.file',req.file);
       console.log('err',err);
