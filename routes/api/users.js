@@ -234,6 +234,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
 router.post('/uploadPost1',auth.required, (req, res) => {
   const { payload: { id } } = req;
   if(id){
+    console.log('id',id);
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
       var oldpath = files.filetoupload.path;
@@ -252,6 +253,7 @@ router.post('/uploadPost1',auth.required, (req, res) => {
             share_post.typeOfFile=fields.typeOfFile ? fields.typeOfFile : '' ;
             share_post.postedOn=new Date();
             share_post.link=link+files.filetoupload.name;
+            console.log('share_post',share_post);
             var sharePostss=new sharePost(share_post);
             sharePostss.save()
               .then((resp) => {
