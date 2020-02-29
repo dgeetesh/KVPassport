@@ -295,6 +295,8 @@ router.post('/uploadPost3',auth.required, (req, res) => {
     console.log('id-',id);
 
     upload(req, res, function (err) {
+      console.log('req',req);
+      console.log('req.data',req.data);
       console.log('req.file',req.file);
       console.log('err',err);
       if (err instanceof multer.MulterError) {
@@ -313,7 +315,7 @@ router.post('/uploadPost3',auth.required, (req, res) => {
           // share_post.caption=req.file.caption ? req.file.caption : '' ;
           // share_post.typeOfFile=req.file.typeOfFile ? req.file.typeOfFile : '' ;
           share_post.postedOn=new Date();
-          share_post.link=link+req.file.filename;
+          // share_post.link=link+req.file.filename;
           console.log('share_post',share_post);
           var sharePostss=new sharePost(share_post);
           sharePostss.save()
