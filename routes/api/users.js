@@ -166,116 +166,116 @@ router.get('/current', auth.required,checkCache, (req, res) => {
 });
 
 
-//POST current route (required, only authenticated users have access) sharig post
-router.post('/uploadPost2',auth.optional, (req) => {
-  let postData=req.body;
-  //  const base64Data=Base64.decode(req.image);
-  console.log('__dirname11',__dirname);
-  // console.log('postData.image',postData.image);
-  let buff = new Buffer(postData.image, 'base64');
-  console.log(buff);
-  // let timeStamp=new Date();
-  let fileName=`${'filenames'}`;
-  fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
-  //  if (err) throw err;
-    console.log('Saved!',err);
-  });
-});
+// //POST current route (required, only authenticated users have access) sharig post
+// router.post('/uploadPost2',auth.optional, (req) => {
+//   let postData=req.body;
+//   //  const base64Data=Base64.decode(req.image);
+//   console.log('__dirname11',__dirname);
+//   // console.log('postData.image',postData.image);
+//   let buff = new Buffer(postData.image, 'base64');
+//   console.log(buff);
+//   // let timeStamp=new Date();
+//   let fileName=`${'filenames'}`;
+//   fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
+//   //  if (err) throw err;
+//     console.log('Saved!',err);
+//   });
+// });
 
 
-//POST current route (required, only authenticated users have access) sharig post
-router.post('/uploadPost',auth.required, (req, res) => {
-  const { payload: { id } } = req;
-  let postData=req.body;
-  console.log(id,postData);
-  if(postData.image){
-    return Users.findById(id)
-      .then((user) => {
-        if(!user) {
-          return res.sendStatus(400);
-        }
-        //  const base64Data=Base64.decode(req.image);
-        let buff = new Buffer(postData.image, 'base64');
-        console.log(buff);
-        let timeStamp=moment().format('YYYY-MM-DD HH:mm:ss');
-        let fileName=user.userName+timeStamp;
-        fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
-        //  if (err) throw err;
-          console.log('Saved!',err);
-        });
-        let share_post={};
-        share_post.posterName=`${user.userName ||''}`;
-        share_post.userId=user._id;
-        share_post.caption=postData.caption ? postData.caption : '' ;
-        share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '';
-        share_post.tag=postData.tag ? postData.tag : '';
-        share_post.postedOn=timeStamp;
-        share_post.link=link+fileName;
-        var sharePostss=new sharePost(share_post);
-        sharePostss.save()
-          .then((resp) => {
-            console.log('resp',resp);
-            return res.json({ user: createJson(resp) });
-          }).catch(postErr=>{
-            console.log('postErr',postErr);
-          });
-      });
+// //POST current route (required, only authenticated users have access) sharig post
+// router.post('/uploadPost',auth.required, (req, res) => {
+//   const { payload: { id } } = req;
+//   let postData=req.body;
+//   console.log(id,postData);
+//   if(postData.image){
+//     return Users.findById(id)
+//       .then((user) => {
+//         if(!user) {
+//           return res.sendStatus(400);
+//         }
+//         //  const base64Data=Base64.decode(req.image);
+//         let buff = new Buffer(postData.image, 'base64');
+//         console.log(buff);
+//         let timeStamp=moment().format('YYYY-MM-DD HH:mm:ss');
+//         let fileName=user.userName+timeStamp;
+//         fs.writeFile(`public/uploads/${fileName}`, buff,function(err){
+//         //  if (err) throw err;
+//           console.log('Saved!',err);
+//         });
+//         let share_post={};
+//         share_post.posterName=`${user.userName ||''}`;
+//         share_post.userId=user._id;
+//         share_post.caption=postData.caption ? postData.caption : '' ;
+//         share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '';
+//         share_post.tag=postData.tag ? postData.tag : '';
+//         share_post.postedOn=timeStamp;
+//         share_post.link=link+fileName;
+//         var sharePostss=new sharePost(share_post);
+//         sharePostss.save()
+//           .then((resp) => {
+//             console.log('resp',resp);
+//             return res.json({ user: createJson(resp) });
+//           }).catch(postErr=>{
+//             console.log('postErr',postErr);
+//           });
+//       });
 
-  }else
-  {
-    return res.status(422).json({
-      errors: 'Invalid Data',
-      status:500
-    });
-  }
-});
+//   }else
+//   {
+//     return res.status(422).json({
+//       errors: 'Invalid Data',
+//       status:500
+//     });
+//   }
+// });
 
-//POST current route (required, only authenticated users have access) sharig post
-router.post('/uploadPost1',auth.required, (req, res) => {
-  const { payload: { id } } = req;
-  if(id){
-    console.log('id',id);
-    var form = new formidable.IncomingForm();
-    form.parse(req, function (err, fields, files) {
-      console.log('files',files);
-      console.log('files.image',files.image);
-      console.log('fields',fields);
-      console.log('err',err);
-      if (err) throw err;
-      var oldpath = files.image.path;
-      var newpath = `public/uploads/${files.image.name}`;
-      fs.rename(oldpath, newpath, function (error) {
-        if (error)  {console.log(error);}
-        return Users.findById(id)
-          .then((user) => {
-            if(!user) {
-              return res.sendStatus(400);
-            }
-            let share_post={};
-            share_post.posterName=`${user.userName ||''}`;
-            share_post.userId=user._id;
-            share_post.caption=fields.caption ? fields.caption : '' ;
-            share_post.typeOfFile=fields.typeOfFile ? fields.typeOfFile : '' ;
-            share_post.postedOn=new Date();
-            share_post.link=link+files.image.name;
-            console.log('share_post',share_post);
-            var sharePostss=new sharePost(share_post);
-            sharePostss.save()
-              .then((resp) => {
-                console.log('resp',resp);
-                return res.json({ user: createJson(resp),status:200 });
-              }).catch(postErr=>{
-                console.log('postErr',postErr);
-                return res.json({ error:'Data Not Found',status:500  });
-              });
-          });
-      });
-    });
-  }else
-  {
-    return res.json({ error:'Data Not Found',status:400  });
-  }
-});
+// //POST current route (required, only authenticated users have access) sharig post
+// router.post('/uploadPost1',auth.required, (req, res) => {
+//   const { payload: { id } } = req;
+//   if(id){
+//     console.log('id',id);
+//     var form = new formidable.IncomingForm();
+//     form.parse(req, function (err, fields, files) {
+//       console.log('files',files);
+//       console.log('files.image',files.image);
+//       console.log('fields',fields);
+//       console.log('err',err);
+//       if (err) throw err;
+//       var oldpath = files.image.path;
+//       var newpath = `public/uploads/${files.image.name}`;
+//       fs.rename(oldpath, newpath, function (error) {
+//         if (error)  {console.log(error);}
+//         return Users.findById(id)
+//           .then((user) => {
+//             if(!user) {
+//               return res.sendStatus(400);
+//             }
+//             let share_post={};
+//             share_post.posterName=`${user.userName ||''}`;
+//             share_post.userId=user._id;
+//             share_post.caption=fields.caption ? fields.caption : '' ;
+//             share_post.typeOfFile=fields.typeOfFile ? fields.typeOfFile : '' ;
+//             share_post.postedOn=new Date();
+//             share_post.link=link+files.image.name;
+//             console.log('share_post',share_post);
+//             var sharePostss=new sharePost(share_post);
+//             sharePostss.save()
+//               .then((resp) => {
+//                 console.log('resp',resp);
+//                 return res.json({ user: createJson(resp),status:200 });
+//               }).catch(postErr=>{
+//                 console.log('postErr',postErr);
+//                 return res.json({ error:'Data Not Found',status:500  });
+//               });
+//           });
+//       });
+//     });
+//   }else
+//   {
+//     return res.json({ error:'Data Not Found',status:400  });
+//   }
+// });
 
 var multer = require('multer');
 var storage = multer.diskStorage({
@@ -283,22 +283,16 @@ var storage = multer.diskStorage({
     cb(null, 'public/uploads');
   },
   filename: function (req, file, cb) {
-    console.log('file',file);
     cb(null, Date.now() + '-' +file.originalname )
   }
 });
 var upload = multer({ storage: storage }).single('file');
 
 // POST current route (required, only authenticated users have access) sharig post with multer
-router.post('/uploadPost3',auth.required, (req, res) => {
+router.post('/uploadPost',auth.required, (req, res) => {
   const { payload: { id } } = req;
   if(id){
     upload(req, res, function (err) {
-      console.log('req',req);
-      console.log('req.postData',JSON.stringify(req.body.postData));
-      console.log('req.body',req.body);
-      console.log('req.file',req.file);
-      console.log('err',err);
       if (err instanceof multer.MulterError) {
         return res.status(500).json(err);
       } else if (err) {
@@ -317,7 +311,6 @@ router.post('/uploadPost3',auth.required, (req, res) => {
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
           share_post.link=link+req.file.filename;
-          console.log('share_post',share_post);
           var sharePostss=new sharePost(share_post);
           sharePostss.save()
             .then((resp) => {
