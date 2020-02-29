@@ -294,7 +294,7 @@ router.post('/uploadPost3',auth.required, (req, res) => {
   const { payload: { id } } = req;
   if(id){
     upload(req, res, function (err) {
-      console.log('req.data',req.data);
+      console.log('req.data',req);
       console.log('req.file',req.file);
       console.log('err',err);
       if (err instanceof multer.MulterError) {
