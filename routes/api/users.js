@@ -187,7 +187,7 @@ router.post('/uploadPost2',auth.optional, (req) => {
 router.post('/uploadPost',auth.required, (req, res) => {
   const { payload: { id } } = req;
   let postData=req.body;
-  console.log(id,postData,req.image);
+  console.log(id,postData);
   if(postData.image){
     return Users.findById(id)
       .then((user) => {
