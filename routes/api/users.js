@@ -295,6 +295,7 @@ router.post('/uploadPost3',auth.required, (req, res) => {
     console.log('id-',id);
 
     upload(req, res, function (err) {
+      console.log('req.file',req.file);
       console.log('err',err);
       if (err instanceof multer.MulterError) {
         return res.status(500).json(err);
