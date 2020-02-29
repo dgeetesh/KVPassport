@@ -277,6 +277,78 @@ router.post('/uploadPost1',auth.required, (req, res) => {
   }
 });
 
+// var multer = require('multer');
+// var storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'public');
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + '-' +file.originalname )
+//   }
+// });
+// var upload = multer({ storage: storage }).single('file');
+
+//POST current route (required, only authenticated users have access) sharig post with multer
+// router.post('/uploadPost3',auth.required, (req, res) => {
+//   const { payload: { id } } = req;
+//   if(id){
+//     console.log('id',id);
+
+//     upload(req, res, function (err) {
+//       if (err instanceof multer.MulterError) {
+//         return res.status(500).json(err);
+//       } else if (err) {
+//         return res.status(500).json(err);
+//       }
+//       return res.status(200).send(req.file);
+//     });
+
+
+//     var form = new formidable.IncomingForm();
+
+
+//     form.parse(req, function (err, fields, files) {
+//       console.log('files',files);
+//       console.log('files.image',files.image);
+//       console.log('fields',fields);
+//       console.log('err',err);
+//       if (err) throw err;
+//       var oldpath = files.image.path;
+//       var newpath = `public/uploads/${files.image.name}`;
+//       fs.rename(oldpath, newpath, function (error) {
+//         if (error)  {console.log(error);}
+//         return Users.findById(id)
+//           .then((user) => {
+//             if(!user) {
+//               return res.sendStatus(400);
+//             }
+//             let share_post={};
+//             share_post.posterName=`${user.userName ||''}`;
+//             share_post.userId=user._id;
+//             share_post.caption=fields.caption ? fields.caption : '' ;
+//             share_post.typeOfFile=fields.typeOfFile ? fields.typeOfFile : '' ;
+//             share_post.postedOn=new Date();
+//             share_post.link=link+files.image.name;
+//             console.log('share_post',share_post);
+//             var sharePostss=new sharePost(share_post);
+//             sharePostss.save()
+//               .then((resp) => {
+//                 console.log('resp',resp);
+//                 return res.json({ user: createJson(resp),status:200 });
+//               }).catch(postErr=>{
+//                 console.log('postErr',postErr);
+//                 return res.json({ error:'Data Not Found',status:500  });
+//               });
+//           });
+//       });
+//     });
+//   }else
+//   {
+//     return res.json({ error:'Data Not Found',status:400  });
+//   }
+// });
+
+
 //GET current route (required, only authenticated users have access) get all post
 router.get('/getAllPosts', auth.required, (req, res) => {
   const { payload: { id } } = req;
