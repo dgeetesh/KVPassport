@@ -304,7 +304,6 @@ router.post('/uploadPost',auth.required, (req, res) => {
           if(!user) {
             return res.sendStatus(400);
           }
-          console.log('req.file',req.file);
           let share_post={};
           share_post.posterName=`${user.userName ||''}`;
           share_post.posterImage=user.profilePic || '';
@@ -319,7 +318,17 @@ router.post('/uploadPost',auth.required, (req, res) => {
           sharePostss.save()
             .then((resp) => {
               console.log('resp',JSON.stringify(resp));
-              return res.json({ user: createJson(resp),status:200 });
+              return sharePost.find({})
+                .then((sharePosData) => {
+                  if(!sharePosData) {
+                    return res.json({ error:'Data Not Found',status:400 });
+                  }
+                  return res.json({ user: sharePosData,status:200 });
+                }).catch(getPosterr=>{
+                  console.log('getPosterr',getPosterr);
+                  return res.json({ error:'Data Not Found',status:500  });
+                });
+              // return res.json({ user: createJson(resp),status:200 });
             }).catch(postErr=>{
               console.log('postErr',postErr);
               return res.json({ error:'Data Not Found',status:500  });
