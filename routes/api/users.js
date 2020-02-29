@@ -314,6 +314,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
           share_post.link=link+req.file.filename;
+          share_post.image=link+req.file.filename;
           var sharePostss=new sharePost(share_post);
           sharePostss.save()
             .then((resp) => {
