@@ -312,8 +312,9 @@ router.post('/uploadPost3',auth.required, (req, res) => {
           let share_post={};
           share_post.posterName=`${user.userName ||''}`;
           share_post.userId=user._id;
-          // share_post.caption=req.file.caption ? req.file.caption : '' ;
-          // share_post.typeOfFile=req.file.typeOfFile ? req.file.typeOfFile : '' ;
+          share_post.caption=req.body.caption ? req.body.caption : '' ;
+          share_post.typeOfFile=req.body.typeOfFile ? req.body.typeOfFile : '' ;
+          share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
           share_post.link=link+req.file.filename;
           console.log('share_post',share_post);
