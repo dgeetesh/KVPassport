@@ -318,7 +318,7 @@ router.post('/uploadPost3',auth.required, (req, res) => {
           var sharePostss=new sharePost(share_post);
           sharePostss.save()
             .then((resp) => {
-              console.log('resp',resp);
+              console.log('resp',JSON.stringify(resp));
               return res.json({ user: createJson(resp),status:200 });
             }).catch(postErr=>{
               console.log('postErr',postErr);
