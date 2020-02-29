@@ -237,8 +237,8 @@ router.post('/uploadPost1',auth.required, (req, res) => {
     console.log('id',id);
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
-      var oldpath = files.filetoupload.path;
-      var newpath = `public/uploads/${files.filetoupload.name}`;
+      var oldpath = files.image.path;
+      var newpath = `public/uploads/${files.image.name}`;
       fs.rename(oldpath, newpath, function (error) {
         if (error)  {console.log(error);}
         return Users.findById(id)
@@ -252,13 +252,13 @@ router.post('/uploadPost1',auth.required, (req, res) => {
             share_post.caption=fields.caption ? fields.caption : '' ;
             share_post.typeOfFile=fields.typeOfFile ? fields.typeOfFile : '' ;
             share_post.postedOn=new Date();
-            share_post.link=link+files.filetoupload.name;
+            share_post.link=link+files.image.name;
             console.log('share_post',share_post);
             var sharePostss=new sharePost(share_post);
             sharePostss.save()
               .then((resp) => {
                 console.log('resp',resp);
-                return res.json({ user: createJson(resp) });
+                return res.json({ user: createJson(resp),status:200 });
               }).catch(postErr=>{
                 console.log('postErr',postErr);
                 return res.json({ error:'Data Not Found',status:500  });
