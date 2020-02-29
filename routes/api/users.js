@@ -305,6 +305,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           }
           let share_post={};
           share_post.posterName=`${user.userName ||''}`;
+          share_post.posterImage=user.profilePic || '';
           share_post.userId=user._id;
           share_post.caption=req.body.caption ? req.body.caption : '' ;
           // share_post.typeOfFile=req.body.typeOfFile ? req.body.typeOfFile : '' ;

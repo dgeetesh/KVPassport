@@ -5,6 +5,10 @@ const { ObjectId } = Schema;
 //sharing the post with user 
 const sharePostSchema = new Schema({
   posterName: String,
+  posterImage:String,
+  surname:String,
+  video:String,
+  image:String,
   userId: { type: ObjectId, ref: 'Users' },
   comments: [
     {
