@@ -295,7 +295,7 @@ router.post('/uploadPost3',auth.required, (req, res) => {
   if(id){
     upload(req, res, function (err) {
       console.log('req',req);
-      console.log('req.postData',req.postData);
+      console.log('req.postData',req.body.postData);
       console.log('req.body',req.body);
       console.log('req.file',req.file);
       console.log('err',err);
@@ -329,46 +329,6 @@ router.post('/uploadPost3',auth.required, (req, res) => {
         });
       // return res.status(200).send(req.file);
     });
-
-
-    // var form = new formidable.IncomingForm();
-
-
-    // form.parse(req, function (err, fields, files) {
-    //   console.log('files',files);
-    //   console.log('files.image',files.image);
-    //   console.log('fields',fields);
-    //   console.log('err',err);
-    //   if (err) throw err;
-    //   var oldpath = files.image.path;
-    //   var newpath = `public/uploads/${files.image.name}`;
-    //   fs.rename(oldpath, newpath, function (error) {
-    //     if (error)  {console.log(error);}
-    //     return Users.findById(id)
-    //       .then((user) => {
-    //         if(!user) {
-    //           return res.sendStatus(400);
-    //         }
-    //         let share_post={};
-    //         share_post.posterName=`${user.userName ||''}`;
-    //         share_post.userId=user._id;
-    //         share_post.caption=fields.caption ? fields.caption : '' ;
-    //         share_post.typeOfFile=fields.typeOfFile ? fields.typeOfFile : '' ;
-    //         share_post.postedOn=new Date();
-    //         share_post.link=link+files.image.name;
-    //         console.log('share_post',share_post);
-    //         var sharePostss=new sharePost(share_post);
-    //         sharePostss.save()
-    //           .then((resp) => {
-    //             console.log('resp',resp);
-    //             return res.json({ user: createJson(resp),status:200 });
-    //           }).catch(postErr=>{
-    //             console.log('postErr',postErr);
-    //             return res.json({ error:'Data Not Found',status:500  });
-    //           });
-    //       });
-    //   });
-    // });
   }else
   {
     return res.json({ error:'Data Not Found',status:400  });
