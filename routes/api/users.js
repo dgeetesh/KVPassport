@@ -283,6 +283,7 @@ var storage = multer.diskStorage({
     cb(null, 'public/uploads');
   },
   filename: function (req, file, cb) {
+    console.log('filename',file);
     cb(null, Date.now() + '-' +file.originalname )
   }
 });
@@ -303,6 +304,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           if(!user) {
             return res.sendStatus(400);
           }
+          console.log('req.file',req.file);
           let share_post={};
           share_post.posterName=`${user.userName ||''}`;
           share_post.posterImage=user.profilePic || '';
