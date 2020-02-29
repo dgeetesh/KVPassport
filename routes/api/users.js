@@ -248,8 +248,8 @@ router.post('/uploadPost1',auth.required, (req, res) => {
             let share_post={};
             share_post.posterName=`${user.userName ||''}`;
             share_post.userId=user._id;
-            share_post.caption=fields.caption;
-            share_post.typeOfFile=fields.typeOfFile;
+            share_post.caption=fields.caption ? fields.caption : '' ;
+            share_post.typeOfFile=fields.typeOfFile ? fields.typeOfFile : '' ;
             share_post.postedOn=new Date();
             share_post.link=link+files.filetoupload.name;
             var sharePostss=new sharePost(share_post);
@@ -259,6 +259,7 @@ router.post('/uploadPost1',auth.required, (req, res) => {
                 return res.json({ user: createJson(resp) });
               }).catch(postErr=>{
                 console.log('postErr',postErr);
+                return res.json({ error:'Data Not Found',status:500  });
               });
           });
       });
