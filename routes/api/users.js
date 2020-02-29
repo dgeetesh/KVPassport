@@ -318,7 +318,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           sharePostss.save()
             .then((resp) => {
               console.log('resp',JSON.stringify(resp));
-              return sharePost.find({})
+              return sharePost.find({}).sort({postedOn:-1})
                 .then((sharePosData) => {
                   if(!sharePosData) {
                     return res.json({ error:'Data Not Found',status:400 });
@@ -328,7 +328,6 @@ router.post('/uploadPost',auth.required, (req, res) => {
                   console.log('getPosterr',getPosterr);
                   return res.json({ error:'Data Not Found',status:500  });
                 });
-              // return res.json({ user: createJson(resp),status:200 });
             }).catch(postErr=>{
               console.log('postErr',postErr);
               return res.json({ error:'Data Not Found',status:500  });
