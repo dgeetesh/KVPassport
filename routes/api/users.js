@@ -237,7 +237,9 @@ router.post('/uploadPost1',auth.required, (req, res) => {
     console.log('id',id);
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, files) {
+      console.log('files',files);
       console.log('files.image',files.image);
+      console.log('fields',fields);
       console.log('err',err);
       if (err) throw err;
       var oldpath = files.image.path;
