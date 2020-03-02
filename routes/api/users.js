@@ -311,6 +311,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           }else{
             timeLineKey='commonTimeline';
           }
+          let domain = user.domain;
           let share_post={};
           share_post.posterName=`${user.userName ||''}`;
           share_post.posterImage=user.profilePic || '';
@@ -327,16 +328,34 @@ router.post('/uploadPost',auth.required, (req, res) => {
           sharePostss.save()
             .then((resp) => {
               console.log('resp',JSON.stringify(resp));
-              return sharePost.find({}).sort({postedOn:-1})
-                .then((sharePosData) => {
-                  if(!sharePosData) {
-                    return res.json({ error:'Data Not Found',status:400 });
-                  }
-                  return res.json({ user: sharePosData,status:200 });
-                }).catch(getPosterr=>{
-                  console.log('getPosterr',getPosterr);
-                  return res.json({ error:'Data Not Found',status:500  });
-                });
+              // return sharePost.find({}).sort({postedOn:-1})
+              //   .then((sharePosData) => {
+              //     if(!sharePosData) {
+              //       return res.json({ error:'Data Not Found',status:400 });
+              //     }
+              //     return res.json({ user: sharePosData,status:200 });
+              //   }).catch(getPosterr=>{
+              //     console.log('getPosterr',getPosterr);
+              //     return res.json({ error:'Data Not Found',status:500  });
+              //   });
+              let pArr=[];
+              pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
+              pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
+              pArr.push(sharePost.find({domain:domain}).sort({postedOn:-1}));
+              Promise.all(pArr).then(function(values) {
+                if(!values) {
+                  return res.json({ error:'Data Not Found', user: [], status:400 });
+                }
+                let getAllPostsData={
+                  commonTimeline:values[0],
+                  personalTimeline:values[1],
+                  domainTimeline:values[2],
+                };
+                return res.json({ timeLine:getAllPostsData,status:200 });
+              }).catch(getPosterr=>{
+                console.log('getPosterr',getPosterr);
+                return res.json({ error:'Data Not Found', user: [], status:500 });
+              });
             }).catch(postErr=>{
               console.log('postErr',postErr);
               return res.json({ error:'Data Not Found',status:500  });
