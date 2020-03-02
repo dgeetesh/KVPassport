@@ -344,7 +344,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
               pArr.push(sharePost.find({domain:domain}).sort({postedOn:-1}));
               Promise.all(pArr).then(function(values) {
                 if(!values) {
-                  return res.json({ error:'Data Not Found', user: [], status:400 });
+                  return res.json({ error:'Data Not Found', timeLine: [], status:400 });
                 }
                 let getAllPostsData={
                   commonTimeline:values[0],
@@ -354,7 +354,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
                 return res.json({ timeLine:getAllPostsData,status:200 });
               }).catch(getPosterr=>{
                 console.log('getPosterr',getPosterr);
-                return res.json({ error:'Data Not Found', user: [], status:500 });
+                return res.json({ error:'Data Not Found', timeLine: [], status:500 });
               });
             }).catch(postErr=>{
               console.log('postErr',postErr);
@@ -408,7 +408,7 @@ router.post('/getTimeLine', auth.required, (req, res) => {
       pArr.push(sharePost.find({domain:domain}));
       Promise.all(pArr).then(function(values) {
         if(!values) {
-          return res.json({ error:'Data Not Found', user: [], status:400 });
+          return res.json({ error:'Data Not Found', timeLine: [], status:400 });
         }
         let getAllPostsData={
           commonTimeline:values[0],
@@ -418,11 +418,11 @@ router.post('/getTimeLine', auth.required, (req, res) => {
         return res.json({ timeLine:getAllPostsData,status:200 });
       }).catch(getPosterr=>{
         console.log('getPosterr',getPosterr);
-        return res.json({ error:'Data Not Found', user: [], status:500 });
+        return res.json({ error:'Data Not Found', timeLine: [], status:500 });
       });
     }).catch(postErr=>{
       console.log('postErr',postErr);
-      return res.json({ error:'Data Not Found', user: [], status:500 });
+      return res.json({ error:'Data Not Found', timeLine: [], status:500 });
     });
   // return sharePost.find({userId:id,[timeLineKey]:true})
   //   .then((sharePosData) => {
