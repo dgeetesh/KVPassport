@@ -382,8 +382,6 @@ router.post('/getTimeLine', auth.required, (req, res) => {
       if(!user) {
         return res.sendStatus(400);
       }
-      console.log('user',user);
-
       let domain = user.domain;
       let pArr=[];
       pArr.push(sharePost.find({commonTimeline:true}));
