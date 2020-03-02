@@ -312,20 +312,20 @@ router.post('/uploadPost',auth.required, (req, res) => {
           //   timeLineKey='commonTimeline';
           // }
           console.log('postData',postData);
-          var personalTimeline=false;
+          // var personalTimeline=false;
           var commonTimeline=false;
           var domainTimeline=false;
           // if(postData.personalTimeline || postData.personalTimeline === 'true'){
-          if(postData.personalTimeline){
-            personalTimeline=true;
-          }
+          // if(postData.personalTimeline){
+          //   personalTimeline=true;
+          // }
           if(postData.commonTimeline){
             commonTimeline=true;
           }
           if(postData.domainTimeline){
             domainTimeline=true;
           }
-          if(!postData.domainTimeline && !postData.commonTimeline && !postData.personalTimeline){
+          if(!postData.domainTimeline && !postData.commonTimeline){
             commonTimeline=true;
           }
 
@@ -335,7 +335,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           share_post.posterImage=user.profilePic || '';
           share_post.userId=user._id;
           share_post.domain=user.domain;
-          share_post.personalTimeline=personalTimeline ? true : false;
+          // share_post.personalTimeline=personalTimeline ? true : false;
           share_post.commonTimeline=commonTimeline ? true : false;
           share_post.domainTimeline=domainTimeline ? true : false;
           share_post.caption=req.body.caption ? req.body.caption : '' ;
@@ -414,9 +414,9 @@ router.post('/getTimeLine', auth.required, (req, res) => {
   let timeLine = req.body;
   console.log('timeLine',timeLine);
   var timeLineKey;
-  if(timeLine.timeLine && timeLine.personal){
-    timeLineKey='personalTimeline';
-  }
+  // if(timeLine.timeLine && timeLine.personal){
+  //   timeLineKey='personalTimeline';
+  // }
   if(timeLine.timeLine && timeLine.common){
     timeLineKey='commonTimeline';
   }
