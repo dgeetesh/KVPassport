@@ -386,7 +386,7 @@ router.post('/getTimeLine', auth.required, (req, res) => {
       let pArr=[];
       pArr.push(sharePost.find({commonTimeline:true}));
       pArr.push(sharePost.find({userId:id}));
-      pArr.push(sharePost.find({domian:domain}));
+      pArr.push(sharePost.find({domain:domain}));
       Promise.all(pArr).then(function(values) {
         if(!values) {
           return res.json({ error:'Data Not Found', user: [], status:400 });
