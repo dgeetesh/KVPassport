@@ -396,7 +396,7 @@ router.post('/getTimeLine', auth.required, (req, res) => {
           personalTimeline:values[1],
           domainTimeline:values[2],
         };
-        return res.json({ user:getAllPostsData,status:200 });
+        return res.json({ timeLine:getAllPostsData,status:200 });
       }).catch(getPosterr=>{
         console.log('getPosterr',getPosterr);
         return res.json({ error:'Data Not Found', user: [], status:500 });
