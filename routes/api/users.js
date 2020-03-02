@@ -395,30 +395,27 @@ router.post('/getTimeLine', auth.required, (req, res) => {
           commonTimeline:values[0],
           personalTimeline:values[1],
           domainTimeline:values[2],
-        }
+        };
         return res.json({ user:getAllPostsData,status:200 });
       }).catch(getPosterr=>{
         console.log('getPosterr',getPosterr);
         return res.json({ error:'Data Not Found', user: [], status:500 });
       });
-      
-      }).catch(postErr=>{
-        console.log('postErr',postErr);
-        return res.json({ error:'Data Not Found', user: [], status:500 });
-      });
-      return sharePost.find({userId:id,[timeLineKey]:true})
-        .then((sharePosData) => {
-          if(!sharePosData) {
-            return res.sendStatus(400);
-          }
-          return res.json({ user: sharePosData,status:200 });
-        }).catch(getPosterr=>{
-          console.log('getPosterr',getPosterr);
-          return res.sendStatus(500);
-        });
-
+    }).catch(postErr=>{
+      console.log('postErr',postErr);
+      return res.json({ error:'Data Not Found', user: [], status:500 });
     });
-
+  // return sharePost.find({userId:id,[timeLineKey]:true})
+  //   .then((sharePosData) => {
+  //     if(!sharePosData) {
+  //       return res.sendStatus(400);
+  //     }
+  //     return res.json({ user: sharePosData,status:200 });
+  //   }).catch(getPosterr=>{
+  //     console.log('getPosterr',getPosterr);
+  //     return res.sendStatus(500);
+  //   });
+  // });
 });
 
 
