@@ -308,8 +308,6 @@ router.post('/uploadPost',auth.required, (req, res) => {
           let postData=req.body;
           if(postData.timeLine && postData.timeLine.toLowerCase() === 'personal'){
             timeLineKey='personalTimeline';
-          }else if(postData.timeLine && postData.timeLine.toLowerCase() === 'student'){
-            timeLineKey='studentTimeline';
           }else{
             timeLineKey='commonTimeline';
           }
@@ -317,6 +315,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           share_post.posterName=`${user.userName ||''}`;
           share_post.posterImage=user.profilePic || '';
           share_post.userId=user._id;
+          share_post.domain=user.domain;
           share_post.caption=req.body.caption ? req.body.caption : '' ;
           share_post[timeLineKey]= timeLineKey ? true : false ;
           // share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '' ;
@@ -375,21 +374,51 @@ router.post('/getTimeLine', auth.required, (req, res) => {
   var timeLineKey;
   if(timeLine.timeLine && timeLine.timeLine.toLowerCase() === 'personal'){
     timeLineKey='personalTimeline';
-  }else if(timeLine.timeLine && timeLine.timeLine.toLowerCase() === 'student'){
-    timeLineKey='studentTimeline';
   }else{
     timeLineKey='commonTimeline';
   }
-  return sharePost.find({userId:id,[timeLineKey]:true})
-    .then((sharePosData) => {
-      if(!sharePosData) {
+  return Users.findById(id)
+    .then((user) => {
+      if(!user) {
         return res.sendStatus(400);
       }
-      return res.json({ user: sharePosData,status:200 });
-    }).catch(getPosterr=>{
-      console.log('getPosterr',getPosterr);
-      return res.sendStatus(500);
+      let domain = user.domain;
+      let pArr=[];
+      pArr.push(sharePost.find({commonTimeline:true}));
+      pArr.push(sharePost.find({userId:id}));
+      pArr.push(sharePost.find({domian:domain}));
+      Promise.all(pArr).then(function(values) {
+        if(!values) {
+          return res.json({ error:'Data Not Found', user: [], status:400 });
+        }
+        let getAllPostsData={
+          commonTimeline:values[0],
+          personalTimeline:values[1],
+          domainTimeline:values[2],
+        }
+        return res.json({ user: getAllPostsData,status:200 });
+      }).catch(getPosterr=>{
+        console.log('getPosterr',getPosterr);
+        return res.json({ error:'Data Not Found', user: [], status:500 });
+      });
+      
+      }).catch(postErr=>{
+        console.log('postErr',postErr);
+        return res.json({ error:'Data Not Found', user: [], status:500 });
+      });
+      return sharePost.find({userId:id,[timeLineKey]:true})
+        .then((sharePosData) => {
+          if(!sharePosData) {
+            return res.sendStatus(400);
+          }
+          return res.json({ user: sharePosData,status:200 });
+        }).catch(getPosterr=>{
+          console.log('getPosterr',getPosterr);
+          return res.sendStatus(500);
+        });
+
     });
+
 });
 
 
