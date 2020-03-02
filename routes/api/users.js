@@ -306,24 +306,47 @@ router.post('/uploadPost',auth.required, (req, res) => {
           }
           var timeLineKey;
           let postData=req.body;
-          if(postData.timeLine && postData.timeLine.toLowerCase() === 'personal'){
-            timeLineKey='personalTimeline';
-          }else{
-            timeLineKey='commonTimeline';
+          // if(postData.timeLine && postData.timeLine.toLowerCase() === 'personal'){
+          //   timeLineKey='personalTimeline';
+          // }else{
+          //   timeLineKey='commonTimeline';
+          // }
+          console.log('postData',postData);
+          var personalTimeline=false;
+          var commonTimeline=false;
+          var domainTimeline=false;
+          // if(postData.personalTimeline || postData.personalTimeline === 'true'){
+          if(postData.personalTimeline){
+            personalTimeline=true;
           }
+          if(postData.commonTimeline){
+            commonTimeline=true;
+          }
+          if(postData.domainTimeline){
+            domainTimeline=true;
+          }
+          if(!postData.domainTimeline && !postData.commonTimeline && !postData.personalTimeline){
+            commonTimeline=true;
+          }
+
           let domain = user.domain;
           let share_post={};
           share_post.posterName=`${user.userName ||''}`;
           share_post.posterImage=user.profilePic || '';
           share_post.userId=user._id;
           share_post.domain=user.domain;
+          share_post.personalTimeline=personalTimeline ? true : false;
+          share_post.commonTimeline=commonTimeline ? true : false;
+          share_post.domainTimeline=domainTimeline ? true : false;
           share_post.caption=req.body.caption ? req.body.caption : '' ;
-          share_post[timeLineKey]= timeLineKey ? true : false ;
+          // share_post[timeLineKey]= timeLineKey ? true : false ;
           // share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '' ;
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
           // share_post.link=link+req.file.filename;
           share_post.image=link+req.file.filename;
+          console.log('share_post',share_post);
+
           var sharePostss=new sharePost(share_post);
           sharePostss.save()
             .then((resp) => {
@@ -341,7 +364,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
               let pArr=[];
               pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
               pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
-              pArr.push(sharePost.find({domain:domain}).sort({postedOn:-1}));
+              pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
               Promise.all(pArr).then(function(values) {
                 if(!values) {
                   return res.json({ error:'Data Not Found', timeLine: [], status:400 });
@@ -391,9 +414,13 @@ router.post('/getTimeLine', auth.required, (req, res) => {
   let timeLine = req.body;
   console.log('timeLine',timeLine);
   var timeLineKey;
-  if(timeLine.timeLine && timeLine.timeLine.toLowerCase() === 'personal'){
+  if(timeLine.timeLine && timeLine.personal){
     timeLineKey='personalTimeline';
-  }else{
+  }
+  if(timeLine.timeLine && timeLine.common){
+    timeLineKey='commonTimeline';
+  }
+  if(timeLine.timeLine && timeLine.domain){
     timeLineKey='commonTimeline';
   }
   return Users.findById(id)
