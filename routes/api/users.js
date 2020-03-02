@@ -304,12 +304,22 @@ router.post('/uploadPost',auth.required, (req, res) => {
           if(!user) {
             return res.sendStatus(400);
           }
+          var timeLineKey;
+          let postData=req.body;
+          if(postData.timeLine && postData.timeLine.toLowerCase() === 'personal'){
+            timeLineKey='personalTimeline';
+          }else if(postData.timeLine && postData.timeLine.toLowerCase() === 'student'){
+            timeLineKey='studentTimeline';
+          }else{
+            timeLineKey='commonTimeline';
+          }
           let share_post={};
           share_post.posterName=`${user.userName ||''}`;
           share_post.posterImage=user.profilePic || '';
           share_post.userId=user._id;
           share_post.caption=req.body.caption ? req.body.caption : '' ;
-          // share_post.typeOfFile=req.body.typeOfFile ? req.body.typeOfFile : '' ;
+          share_post[timeLineKey]=postData.caption ? postData.caption : '' ;
+          // share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '' ;
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
           // share_post.link=link+req.file.filename;
@@ -356,6 +366,32 @@ router.get('/getAllPosts', auth.required, (req, res) => {
       return res.sendStatus(500);
     });
 });
+
+//POST current route (required, only authenticated users have access) get timeLine Post
+router.post('/getTimeLine', auth.required, (req, res) => {
+  const { payload: { id } } = req;
+  let timeLine = req.body;
+  console.log('timeLine',timeLine);
+  var timeLineKey;
+  if(timeLine.timeLine && timeLine.timeLine.toLowerCase() === 'personal'){
+    timeLineKey='personalTimeline';
+  }else if(timeLine.timeLine && timeLine.timeLine.toLowerCase() === 'student'){
+    timeLineKey='studentTimeline';
+  }else{
+    timeLineKey='commonTimeline';
+  }
+  return sharePost.find({userId:id,[timeLineKey]:true})
+    .then((sharePosData) => {
+      if(!sharePosData) {
+        return res.sendStatus(400);
+      }
+      return res.json({ user: sharePosData,status:200 });
+    }).catch(getPosterr=>{
+      console.log('getPosterr',getPosterr);
+      return res.sendStatus(500);
+    });
+});
+
 
 //POST current route (required, only authenticated users have access) comment in the post
 router.post('/userComment', auth.required, (req, res) => {

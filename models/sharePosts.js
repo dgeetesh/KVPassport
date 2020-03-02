@@ -37,6 +37,7 @@ const sharePostSchema = new Schema({
   caption:String,
   postedOn:Date,
   commonTimeline:Boolean,
+  personalTimeline:Boolean,
   studentTimeline:Boolean,
   tag:String,
 });
