@@ -276,7 +276,7 @@ router.get('/current', auth.required,checkCache, (req, res) => {
 //     return res.json({ error:'Data Not Found',status:400  });
 //   }
 // });
-
+ 
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
