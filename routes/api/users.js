@@ -464,6 +464,30 @@ router.post('/getTimeLine', auth.required, (req, res) => {
   // });
 });
 
+//DELETE post route (required, only authenticated users have access)
+router.delete('/deletePost/:postId?', auth.required, (req, res) => {
+  const { payload: { id } } = req;
+  const postId=req.params.postId;
+  if(postId){
+    return sharePost.deleteOne({_id:postId})
+      .then((deletePost) => {
+        console.log('deletePost',deletePost);
+        return res.json({ post: 'Post Deleted Successfully',status:200 });
+      }).catch(err=>{
+        console.log(err);
+        return res.sendStatus(500).json({
+          post: 'Error in Deleting Post',status:500 
+        });
+      });
+  }else{
+    return res.status(422).json({
+      errors: {
+        postId: 'is required',
+      },
+    });
+  }
+});
+
 
 //POST current route (required, only authenticated users have access) comment in the post
 router.post('/userComment', auth.required, (req, res) => {
@@ -471,6 +495,9 @@ router.post('/userComment', auth.required, (req, res) => {
   const postId=req.body.postId;
   const commentText=req.body.comment;
   if(postId){
+    return Users.findOne({_id:id})
+    .then((userData) => {
+    // });
     return sharePost.find({_id:postId})
       .then((sharePostData) => {
         if(!sharePostData) {
@@ -479,21 +506,104 @@ router.post('/userComment', auth.required, (req, res) => {
         let comment= {
           userId:id,
           comments:commentText,
-          userName:'userName',
+          userName:`${userData.userName}`,
           commentedOn:new Date()
         };
         sharePost.update({_id:postId},{$push:{comments:comment}}).then(resp=>{
           console.log(resp);
-          return res.json({ user: createJson(resp),status:200 });
+          let domain = userData.domain;
+          let pArr=[];
+          pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
+          pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
+          pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
+          Promise.all(pArr).then(function(values) {
+            if(!values) {
+              return res.json({ error:'Data Not Found', timeLine: [], status:400 });
+            }
+            let getAllPostsData={
+              commonTimeline:values[0],
+              personalTimeline:values[1],
+              domainTimeline:values[2],
+            };
+            return res.json({ timeLine:getAllPostsData,status:200 });
+
+          // return res.json({ user: createJson(resp),status:200 });
         }).catch(commentErr=>{
           console.log('commentErr',commentErr);
-          res.status(500);
+          return res.json({ timeLine: [], status:500 });
+          // res.status(500);
         });
-        return res.json({ user: sharePost });
+        // return res.json({ user: sharePost });
       }).catch(err=>{
         console.log(err);
-        return res.sendStatus(500);
+        return res.json({ timeLine: [], status:500 });
       });
+    });
+  });
+  }else{
+    return res.status(422).json({
+      errors: {
+        postId: 'is required',
+      },
+    });
+  }
+});
+
+
+//POST current route (required, only authenticated users have access) comment in the post
+router.post('/deleteUserComment', auth.required, (req, res) => {
+  const { payload: { id } } = req;
+  const postId=req.body.postId;
+  const commentId=req.body.commentId;
+  if(postId){
+    return Users.findOne({_id:id})
+    .then((userData) => {
+    // });
+    return sharePost.find({_id:postId})
+      .then((sharePostData) => {
+        if(!sharePostData) {
+          return res.sendStatus(400);
+        }
+        // let comment= {
+        //   userId:id,
+        //   comments:commentText,
+        //   userName:`${userData.userName}`,
+        //   commentedOn:new Date()
+        // };
+        sharePost.update({_id:postId},
+          { $pull: { comments : { _id : commentId } } },
+          { safe: true })
+          .then(resp=>{
+          console.log(resp);
+          let domain = userData.domain;
+          let pArr=[];
+          pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
+          pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
+          pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
+          Promise.all(pArr).then(function(values) {
+            if(!values) {
+              return res.json({ error:'Data Not Found', timeLine: [], status:400 });
+            }
+            let getAllPostsData={
+              commonTimeline:values[0],
+              personalTimeline:values[1],
+              domainTimeline:values[2],
+            };
+            return res.json({ timeLine:getAllPostsData,status:200 });
+
+          // return res.json({ user: createJson(resp),status:200 });
+        }).catch(commentErr=>{
+          console.log('commentErr',commentErr);
+          return res.json({ timeLine: [], status:500 });
+          // res.status(500);
+        });
+        // return res.json({ user: sharePost });
+      }).catch(err=>{
+        console.log(err);
+        return res.json({ timeLine: [], status:500 });
+      });
+    });
+  });
   }else{
     return res.status(422).json({
       errors: {
@@ -681,5 +791,67 @@ router.post('/dataFordomain', function(req, res){
     res.status(500).json({msg:'Something Went Wrong',status:500});
   });
 });
+
+//GET current route (required, only authenticated users have access) get all post
+router.get('/getUserProfile', auth.required, (req, res) => {
+  const { payload: { id } } = req;
+  if(id){
+  return Users.findOne({_id:id})
+    .then((userData) => {
+      if(!userData) {
+        return res.json({ user: {}, status:500 });
+      }
+      return res.json({ user: createJson(userData), status:200 });
+    }).catch(errorUserProfile=>{
+      console.log('errorUserProfile',errorUserProfile);
+      return res.json({ user: {}, status:500 });
+    });
+  }else
+  {
+    return res.status(422).json({
+      errors: 'Invalid Data',
+      status:500
+    });
+  }
+});
+
+router.post('/editUserProfile', auth.required, (req, res) => {
+  const { payload: { id } } = req;
+  let updateData=req.body;
+  if(id){
+    let setData={};
+    Object.keys(updateData).forEach(function (key) {
+      setData[key]=updateData[key];
+    });
+    console.log(setData); // value
+    return Users.update({_id:id},
+    {
+      $set:setData
+    })
+    .then((updateData) => {
+    // });
+    console.log(updateData); // value
+    return Users.findOne({_id:id})
+      .then((userData) => {
+        if(!userData) {
+          return res.json({ user: {}, status:500 });
+        }
+        return res.json({ user: createJson(userData), status:200 });
+      }).catch(errorEditUserProfile=>{
+        console.log('errorEditUserProfile',errorEditUserProfile);
+        return res.json({ user: {}, status:500 });
+      });
+
+    });
+
+  }else
+  {
+    return res.status(422).json({
+      errors: 'Invalid Data',
+      status:500
+    });
+  }
+});
+
 
 module.exports = router;
