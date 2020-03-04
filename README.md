@@ -12,7 +12,7 @@ Make sure you have these installed on your machine
 
 ### Installing packages
 
-Install packages
+Install packages.
 
 ```
 npm i
