@@ -319,15 +319,15 @@ router.post('/uploadPost',auth.required, (req, res) => {
           // if(postData.personalTimeline){
           //   personalTimeline=true;
           // }
-          if(postData.commonTimeline){
+          if(postData.commonTimeline === 'true'){
             commonTimeline=true;
           }
-          if(postData.domainTimeline){
+          if(postData.domainTimeline === 'true'){
             domainTimeline=true;
           }
-          if(!postData.domainTimeline && !postData.commonTimeline){
-            commonTimeline=true;
-          }
+          // if(!postData.domainTimeline && !postData.commonTimeline){
+          //   commonTimeline=true;
+          // }
 
           let domain = user.domain;
           let share_post={};
@@ -852,6 +852,5 @@ router.post('/editUserProfile', auth.required, (req, res) => {
     });
   }
 });
-
 
 module.exports = router;
