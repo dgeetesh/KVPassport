@@ -348,6 +348,11 @@ router.post('/uploadPost',auth.required, (req, res) => {
               pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
               pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
               pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
+              // pArr.push(
+              //   sharePost.aggregate([
+              //     { "$match": domainTimeline:true,domain:domain },])
+              // );
+              
               Promise.all(pArr).then(function(values) {
                 if(!values) {
                   return res.json({ error:'Data Not Found', timeLine: [], status:400 });
@@ -364,7 +369,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
               });
             }).catch(postErr=>{
               console.log('postErr',postErr);
-              return res.json({ error:'Data Not Found',status:500  });
+              return res.json({ error:'Data Not Found',timeLine: [],status:500  });
             });
         });
       // return res.status(200).send(req.file);
