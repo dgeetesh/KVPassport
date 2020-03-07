@@ -519,25 +519,25 @@ router.post('/userComment', auth.required, (req, res) => {
           pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
           Promise.all(pArr).then(function(values) {
             if(!values) {
-              return res.json({ error:'Data Not Found', timeLine: [], status:400 });
+              return res.json({ error:'Data Not Found', timeLine: [], status:false });
             }
             let getAllPostsData={
               commonTimeline:values[0],
               personalTimeline:values[1],
               domainTimeline:values[2],
             };
-            return res.json({ timeLine:getAllPostsData,status:200 });
+            return res.json({ timeLine:getAllPostsData,status:true });
 
           // return res.json({ user: createJson(resp),status:200 });
         }).catch(commentErr=>{
           console.log('commentErr',commentErr);
-          return res.json({ timeLine: [], status:500 });
+          return res.json({ timeLine: [], status:false });
           // res.status(500);
         });
         // return res.json({ user: sharePost });
       }).catch(err=>{
         console.log(err);
-        return res.json({ timeLine: [], status:500 });
+        return res.json({ timeLine: [], status:false });
       });
     });
   });
@@ -546,6 +546,7 @@ router.post('/userComment', auth.required, (req, res) => {
       errors: {
         postId: 'is required',
       },
+      status:false
     });
   }
 });
