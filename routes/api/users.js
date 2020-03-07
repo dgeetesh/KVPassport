@@ -14,9 +14,9 @@ const coachings =  mongoose.model('coachings');
 const college =  mongoose.model('college');
 const activities =  mongoose.model('activities');
 const hotLinks = mongoose.model('hotLinks');
-var formidable = require('formidable');
-var fs = require('fs');
-const moment=require('moment');
+// var formidable = require('formidable');
+// var fs = require('fs');
+// const moment=require('moment');
 // eslint-disable-next-line no-unused-vars
 var _ = require('lodash');
 var link='https://kvmobileapp.herokuapp.com/uploads/';
@@ -352,7 +352,6 @@ router.post('/uploadPost',auth.required, (req, res) => {
               //   sharePost.aggregate([
               //     { "$match": domainTimeline:true,domain:domain },])
               // );
-              
               Promise.all(pArr).then(function(values) {
                 if(!values) {
                   return res.json({ error:'Data Not Found', timeLine: [], status:400 });
@@ -453,9 +452,9 @@ router.post('/getTimeLine', auth.required, (req, res) => {
 });
 
 //DELETE post route (required, only authenticated users have access)
-router.delete('/deletePost/:postId?', auth.required, (req, res) => {
+router.post('/deletePost', auth.required, (req, res) => {
   const { payload: { id } } = req;
-  const postId=req.params.postId;
+  const postId=req.body.postId;
   if(postId){
     return sharePost.deleteOne({_id:postId})
       .then((deletePost) => {
