@@ -508,7 +508,8 @@ router.post('/userComment', auth.required, (req, res) => {
           userId:id,
           comments:commentText,
           userName:`${userData.userName}`,
-          commentedOn:new Date()
+          commentedOn:new Date(),
+          profilePic:userData ? userData.profilePic : ''
         };
         sharePost.update({_id:postId},{$push:{comments:comment}}).then(resp=>{
           console.log(resp);

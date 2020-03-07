@@ -29,6 +29,7 @@ const sharePostSchema = new Schema({
       {
         type: Date,
       },
+      profilePic:String
     }
   ],
   likes: Array,
