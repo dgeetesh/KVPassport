@@ -284,7 +284,7 @@ var storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     console.log('filename',file);
-    cb(null, Date.now() + '-' +file.originalname )
+    cb(null, Date.now() + '-' +file.originalname)
   }
 });
 var upload = multer({ storage: storage }).single('file');
@@ -311,7 +311,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           // }else{
           //   timeLineKey='commonTimeline';
           // }
-          console.log('postData',req.file);
+          console.log('postData',postData,req.file);
           // var personalTimeline=false;
           var commonTimeline=false;
           var domainTimeline=false;
@@ -338,14 +338,21 @@ router.post('/uploadPost',auth.required, (req, res) => {
           // share_post.personalTimeline=personalTimeline ? true : false;
           share_post.commonTimeline=commonTimeline ? true : false;
           share_post.domainTimeline=domainTimeline ? true : false;
-          share_post.caption=req.body.caption ? req.body.caption : '' ;
           // share_post[timeLineKey]= timeLineKey ? true : false ;
           share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '';
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
           // share_post.link=link+req.file.filename;
-          var postFilename=req.file ? req.file.filename : '';
-          share_post.image=link+postFilename;
+          if(req.file && req.file.mimetype.includes('image')){
+            var postImagename=req.file ? req.file.filename : '';
+            share_post.image=link+postImagename;
+          }else if(req.file && req.file.mimetype.includes('video')){
+            var postVideoname=req.file ? req.file.filename : '';
+            share_post.video=link+postVideoname;
+          }
+          if(req.body.caption){
+            share_post.caption=req.body.caption;
+          }
           console.log('share_post',share_post);
 
           var sharePostss=new sharePost(share_post);
