@@ -340,7 +340,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           share_post.domainTimeline=domainTimeline ? true : false;
           share_post.caption=req.body.caption ? req.body.caption : '' ;
           // share_post[timeLineKey]= timeLineKey ? true : false ;
-          // share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '';
+          share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '';
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
           // share_post.link=link+req.file.filename;
@@ -559,6 +559,7 @@ router.post('/deleteUserComment', auth.required, (req, res) => {
   const { payload: { id } } = req;
   const postId=req.body.postId;
   const commentId=req.body.commentId;
+  console.log(req.body);
   if(postId){
     return Users.findOne({_id:id})
       .then((userData) => {
