@@ -295,39 +295,26 @@ router.post('/uploadPost',auth.required, (req, res) => {
   if(id){
     upload(req, res, function (err) {
       if (err instanceof multer.MulterError) {
-        return res.status(500).json(err);
+        return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
       } else if (err) {
-        return res.status(500).json(err);
+        return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
       }
       return Users.findById(id)
         .then((user) => {
           if(!user) {
             return res.sendStatus(400);
           }
-          var timeLineKey;
           let postData=req.body;
-          // if(postData.timeLine && postData.timeLine.toLowerCase() === 'personal'){
-          //   timeLineKey='personalTimeline';
-          // }else{
-          //   timeLineKey='commonTimeline';
-          // }
           console.log('postData',postData,req.file);
           // var personalTimeline=false;
           var commonTimeline=false;
           var domainTimeline=false;
-          // if(postData.personalTimeline || postData.personalTimeline === 'true'){
-          // if(postData.personalTimeline){
-          //   personalTimeline=true;
-          // }
           if(postData.commonTimeline === 'true'){
             commonTimeline=true;
           }
           if(postData.domainTimeline === 'true'){
             domainTimeline=true;
           }
-          // if(!postData.domainTimeline && !postData.commonTimeline){
-          //   commonTimeline=true;
-          // }
 
           let domain = user.domain;
           let share_post={};
@@ -335,14 +322,12 @@ router.post('/uploadPost',auth.required, (req, res) => {
           share_post.posterImage=user.profilePic || '';
           share_post.userId=user._id;
           share_post.domain=user.domain;
-          // share_post.personalTimeline=personalTimeline ? true : false;
           share_post.commonTimeline=commonTimeline ? true : false;
           share_post.domainTimeline=domainTimeline ? true : false;
-          // share_post[timeLineKey]= timeLineKey ? true : false ;
           share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '';
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
-          // share_post.link=link+req.file.filename;
+
           if(req.file && req.file.mimetype.includes('image')){
             var postImagename=req.file ? req.file.filename : '';
             share_post.image=link+postImagename;
@@ -359,16 +344,6 @@ router.post('/uploadPost',auth.required, (req, res) => {
           sharePostss.save()
             .then((resp) => {
               console.log('resp',JSON.stringify(resp));
-              // return sharePost.find({}).sort({postedOn:-1})
-              //   .then((sharePosData) => {
-              //     if(!sharePosData) {
-              //       return res.json({ error:'Data Not Found',status:400 });
-              //     }
-              //     return res.json({ user: sharePosData,status:200 });
-              //   }).catch(getPosterr=>{
-              //     console.log('getPosterr',getPosterr);
-              //     return res.json({ error:'Data Not Found',status:500  });
-              //   });
               let pArr=[];
               pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
               pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
