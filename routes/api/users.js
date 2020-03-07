@@ -340,7 +340,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           share_post.domainTimeline=domainTimeline ? true : false;
           share_post.caption=req.body.caption ? req.body.caption : '' ;
           // share_post[timeLineKey]= timeLineKey ? true : false ;
-          // share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '' ;
+          // share_post.typeOfFile=postData.typeOfFile ? postData.typeOfFile : '';
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
           // share_post.link=link+req.file.filename;
@@ -494,6 +494,7 @@ router.post('/userComment', auth.required, (req, res) => {
   const { payload: { id } } = req;
   const postId=req.body.postId;
   const commentText=req.body.comment;
+  console.log('postId',req.body);
   if(postId){
     return Users.findOne({_id:id})
     .then((userData) => {
@@ -853,4 +854,45 @@ router.post('/editUserProfile', auth.required, (req, res) => {
   }
 });
 
+const sendEmail= require('../../config/email.js');
+
+// Reset password page
+router.get('/resetPassword/:userId', auth.optional, (req, res) => {
+  console.log('userId',req.params.userId);
+  res.render('resetPasswordPage',{userId:req.params.userId});
+});
+
+
+//GET current route (required, only authenticated users have access) forgot password
+router.post('/resetPassword', auth.optional, (req, res) => {
+passwordData=req.body;
+  return Users.findOne({_id:passwordData.userId})
+  .then((userData) => {
+    if(!userData) {
+      return res.json({ user: {},message:'User not found', status:500 });
+    }
+    setPassword(req, res,userData.email,userData);
+  }).catch(errorforgotPassword=>{
+    console.log('forgotPassword Error',errorforgotPassword);
+    return res.json({ user: {},message:'Something Went Wrong',Error:errorforgotPassword, status:500 });
+  });
+});
+// check email and then send mail
+router.post('/forgotPassword', auth.optional, (req, res) => {
+  userEmail=req.body;
+  return Users.findOne({email:userEmail.email})
+  .then((userData) => {
+    if(!userData) {
+      return res.json({ user: {},message:'User not found', status:500 });
+    }
+    sendEmail(req, res,userData.email,userData);
+  }).catch(errorforgotPassword=>{
+    console.log('forgotPassword Error',errorforgotPassword);
+    return res.json({ user: {},message:'Something Went Wrong',Error:errorforgotPassword, status:500 });
+  });
+
+  function getContent(){
+
+  }
+});
 module.exports = router;
