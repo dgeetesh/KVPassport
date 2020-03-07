@@ -311,7 +311,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
           // }else{
           //   timeLineKey='commonTimeline';
           // }
-          console.log('postData',postData);
+          console.log('postData',req.file);
           // var personalTimeline=false;
           var commonTimeline=false;
           var domainTimeline=false;
@@ -344,7 +344,8 @@ router.post('/uploadPost',auth.required, (req, res) => {
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
           // share_post.link=link+req.file.filename;
-          share_post.image=link+req.file.filename;
+          var postFilename=req.file ? req.file.filename : '';
+          share_post.image=link+postFilename;
           console.log('share_post',share_post);
 
           var sharePostss=new sharePost(share_post);
@@ -476,7 +477,7 @@ router.delete('/deletePost/:postId?', auth.required, (req, res) => {
       }).catch(err=>{
         console.log(err);
         return res.sendStatus(500).json({
-          post: 'Error in Deleting Post',status:500 
+          post: 'Error in Deleting Post',status:500
         });
       });
   }else{
@@ -497,51 +498,51 @@ router.post('/userComment', auth.required, (req, res) => {
   console.log('postId',req.body);
   if(postId){
     return Users.findOne({_id:id})
-    .then((userData) => {
-    // });
-    return sharePost.find({_id:postId})
-      .then((sharePostData) => {
-        if(!sharePostData) {
-          return res.sendStatus(400);
-        }
-        let comment= {
-          userId:id,
-          comments:commentText,
-          userName:`${userData.userName}`,
-          commentedOn:new Date(),
-          profilePic:userData ? userData.profilePic : ''
-        };
-        sharePost.update({_id:postId},{$push:{comments:comment}}).then(resp=>{
-          console.log(resp);
-          let domain = userData.domain;
-          let pArr=[];
-          pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
-          pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
-          pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
-          Promise.all(pArr).then(function(values) {
-            if(!values) {
-              return res.json({ error:'Data Not Found', timeLine: [], status:false });
+      .then((userData) => {
+        // });
+        return sharePost.find({_id:postId})
+          .then((sharePostData) => {
+            if(!sharePostData) {
+              return res.sendStatus(400);
             }
-            let getAllPostsData={
-              commonTimeline:values[0],
-              personalTimeline:values[1],
-              domainTimeline:values[2],
+            let comment= {
+              userId:id,
+              comments:commentText,
+              userName:`${userData.userName}`,
+              commentedOn:new Date(),
+              profilePic:userData ? userData.profilePic : ''
             };
-            return res.json({ timeLine:getAllPostsData,status:true });
+            sharePost.update({_id:postId},{$push:{comments:comment}}).then(resp=>{
+              console.log(resp);
+              let domain = userData.domain;
+              let pArr=[];
+              pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
+              pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
+              pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
+              Promise.all(pArr).then(function(values) {
+                if(!values) {
+                  return res.json({ error:'Data Not Found', timeLine: [], status:false });
+                }
+                let getAllPostsData={
+                  commonTimeline:values[0],
+                  personalTimeline:values[1],
+                  domainTimeline:values[2],
+                };
+                return res.json({ timeLine:getAllPostsData,status:true });
 
-          // return res.json({ user: createJson(resp),status:200 });
-        }).catch(commentErr=>{
-          console.log('commentErr',commentErr);
-          return res.json({ timeLine: [], status:false });
-          // res.status(500);
-        });
-        // return res.json({ user: sharePost });
-      }).catch(err=>{
-        console.log(err);
-        return res.json({ timeLine: [], status:false });
+              // return res.json({ user: createJson(resp),status:200 });
+              }).catch(commentErr=>{
+                console.log('commentErr',commentErr);
+                return res.json({ timeLine: [], status:false });
+                // res.status(500);
+              });
+            // return res.json({ user: sharePost });
+            }).catch(err=>{
+              console.log(err);
+              return res.json({ timeLine: [], status:false });
+            });
+          });
       });
-    });
-  });
   }else{
     return res.status(422).json({
       errors: {
@@ -560,53 +561,53 @@ router.post('/deleteUserComment', auth.required, (req, res) => {
   const commentId=req.body.commentId;
   if(postId){
     return Users.findOne({_id:id})
-    .then((userData) => {
-    // });
-    return sharePost.find({_id:postId})
-      .then((sharePostData) => {
-        if(!sharePostData) {
-          return res.sendStatus(400);
-        }
-        // let comment= {
-        //   userId:id,
-        //   comments:commentText,
-        //   userName:`${userData.userName}`,
-        //   commentedOn:new Date()
-        // };
-        sharePost.update({_id:postId},
-          { $pull: { comments : { _id : commentId } } },
-          { safe: true })
-          .then(resp=>{
-          console.log(resp);
-          let domain = userData.domain;
-          let pArr=[];
-          pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
-          pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
-          pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
-          Promise.all(pArr).then(function(values) {
-            if(!values) {
-              return res.json({ error:'Data Not Found', timeLine: [], status:400 });
+      .then((userData) => {
+        // });
+        return sharePost.find({_id:postId})
+          .then((sharePostData) => {
+            if(!sharePostData) {
+              return res.sendStatus(400);
             }
-            let getAllPostsData={
-              commonTimeline:values[0],
-              personalTimeline:values[1],
-              domainTimeline:values[2],
-            };
-            return res.json({ timeLine:getAllPostsData,status:200 });
+            // let comment= {
+            //   userId:id,
+            //   comments:commentText,
+            //   userName:`${userData.userName}`,
+            //   commentedOn:new Date()
+            // };
+            sharePost.update({_id:postId},
+              { $pull: { comments : { _id : commentId } } },
+              { safe: true })
+              .then(resp=>{
+                console.log(resp);
+                let domain = userData.domain;
+                let pArr=[];
+                pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
+                pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
+                pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
+                Promise.all(pArr).then(function(values) {
+                  if(!values) {
+                    return res.json({ error:'Data Not Found', timeLine: [], status:400 });
+                  }
+                  let getAllPostsData={
+                    commonTimeline:values[0],
+                    personalTimeline:values[1],
+                    domainTimeline:values[2],
+                  };
+                  return res.json({ timeLine:getAllPostsData,status:200 });
 
-          // return res.json({ user: createJson(resp),status:200 });
-        }).catch(commentErr=>{
-          console.log('commentErr',commentErr);
-          return res.json({ timeLine: [], status:500 });
-          // res.status(500);
-        });
-        // return res.json({ user: sharePost });
-      }).catch(err=>{
-        console.log(err);
-        return res.json({ timeLine: [], status:500 });
+                // return res.json({ user: createJson(resp),status:200 });
+                }).catch(commentErr=>{
+                  console.log('commentErr',commentErr);
+                  return res.json({ timeLine: [], status:500 });
+                  // res.status(500);
+                });
+                // return res.json({ user: sharePost });
+              }).catch(err=>{
+                console.log(err);
+                return res.json({ timeLine: [], status:500 });
+              });
+          });
       });
-    });
-  });
   }else{
     return res.status(422).json({
       errors: {
@@ -867,13 +868,19 @@ router.get('/resetPassword/:userId', auth.optional, (req, res) => {
 
 //GET current route (required, only authenticated users have access) forgot password
 router.post('/resetPassword', auth.optional, (req, res) => {
-passwordData=req.body;
+let passwordData=req.body;
   return Users.findOne({_id:passwordData.userId})
   .then((userData) => {
     if(!userData) {
       return res.json({ user: {},message:'User not found', status:500 });
     }
-    setPassword(req, res,userData.email,userData);
+    const finalUser = new Users(userData);
+    finalUser.setPassword(passwordData.newPassword);
+    finalUser.save().then(resp=>{
+      console.log(JSON.stringify(resp));
+      return res.json({ user: resp, status:200 });
+    });
+
   }).catch(errorforgotPassword=>{
     console.log('forgotPassword Error',errorforgotPassword);
     return res.json({ user: {},message:'Something Went Wrong',Error:errorforgotPassword, status:500 });
