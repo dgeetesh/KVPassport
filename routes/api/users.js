@@ -306,10 +306,9 @@ router.post('/uploadPost',auth.required, (req, res) => {
             return res.sendStatus(400);
           }
           let postData=req.body;
-          console.log('postData',postData,req.files,req.files.length === 0 && !postData.caption);
+          console.log('postData',postData,req.files);
           if(req.files.length === 0 && !postData.caption){
             throw 'Data Not Found';
-            // return res.sendStatus(400).json({ message:'Data Not Found', timeLine: [], status:400 });
           }
           // var personalTimeline=false;
           var commonTimeline=false;
@@ -333,16 +332,6 @@ router.post('/uploadPost',auth.required, (req, res) => {
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
 
-          // if(req.file && req.file.mimetype.includes('image')){
-          //   var postImagename=req.file ? req.file.filename : '';
-          //   share_post.image=link+postImagename;
-          // }else if(req.file && req.file.mimetype.includes('video')){
-          //   var postVideoname=req.file ? req.file.filename : '';
-          //   share_post.video=link+postVideoname;
-          // }
-          // if(req.body.caption){
-          //   share_post.caption=req.body.caption;
-          // }
           let imageArray=[];
           let videoArray=[];
           let pdfArray=[];
