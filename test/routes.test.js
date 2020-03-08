@@ -4,7 +4,7 @@ const app = require('../app');//Test case for dji flight all correct paramters v
 test('/api/users/current', async done => {
   jest.setTimeout(1500000);
   const response = await request(app)
-    .get('/api/users/current')
+    .get('/api/users/current');
   expect(response.statusCode).toBe(200);
   done();
 });

@@ -287,7 +287,8 @@ var storage = multer.diskStorage({
     cb(null, Date.now() + '-' +file.originalname)
   }
 });
-var upload = multer({ storage: storage }).single('file');
+var upload = multer({ storage: storage }).array('file',10);
+// var upload = multer({ storage: storage });
 
 // POST current route (required, only authenticated users have access) sharig post with multer
 router.post('/uploadPost',auth.required, (req, res) => {
@@ -305,7 +306,11 @@ router.post('/uploadPost',auth.required, (req, res) => {
             return res.sendStatus(400);
           }
           let postData=req.body;
-          console.log('postData',postData,req.file);
+          console.log('postData',postData,req.files,req.files.length === 0 && !postData.caption);
+          if(req.files.length === 0 && !postData.caption){
+            throw 'Data Not Found';
+            // return res.sendStatus(400).json({ message:'Data Not Found', timeLine: [], status:400 });
+          }
           // var personalTimeline=false;
           var commonTimeline=false;
           var domainTimeline=false;
@@ -328,16 +333,34 @@ router.post('/uploadPost',auth.required, (req, res) => {
           share_post.tag=req.body.tag ? req.body.tag : '' ;
           share_post.postedOn=new Date();
 
-          if(req.file && req.file.mimetype.includes('image')){
-            var postImagename=req.file ? req.file.filename : '';
-            share_post.image=link+postImagename;
-          }else if(req.file && req.file.mimetype.includes('video')){
-            var postVideoname=req.file ? req.file.filename : '';
-            share_post.video=link+postVideoname;
+          // if(req.file && req.file.mimetype.includes('image')){
+          //   var postImagename=req.file ? req.file.filename : '';
+          //   share_post.image=link+postImagename;
+          // }else if(req.file && req.file.mimetype.includes('video')){
+          //   var postVideoname=req.file ? req.file.filename : '';
+          //   share_post.video=link+postVideoname;
+          // }
+          // if(req.body.caption){
+          //   share_post.caption=req.body.caption;
+          // }
+          let imageArray=[];
+          if(req.files.length>0){
+            req.files.map(files=>{
+              if(files && files.mimetype.includes('image')){
+                var postImagename=files ? files.filename : '';
+                imageArray.push(link+postImagename);
+                share_post.image=imageArray;
+              }else if(files && files.mimetype.includes('video')){
+                var postVideoname=files ? files.filename : '';
+                share_post.video.push(link+postVideoname);
+              }
+            });
           }
+
           if(req.body.caption){
             share_post.caption=req.body.caption;
           }
+
           console.log('share_post',share_post);
 
           var sharePostss=new sharePost(share_post);
@@ -370,8 +393,10 @@ router.post('/uploadPost',auth.required, (req, res) => {
               console.log('postErr',postErr);
               return res.json({ error:'Data Not Found',timeLine: [],status:500  });
             });
+        }).catch(postErr=>{
+          console.log('postErr',postErr);
+          return res.json({ error:'Data Not Found',timeLine: [],status:500  });
         });
-      // return res.status(200).send(req.file);
     });
   }else
   {
