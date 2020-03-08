@@ -9,8 +9,9 @@ const sharePostSchema = new Schema({
   surname:String,
   // video:String,
   // image:String,
-  video:{ type: Array},
-  image:{ type: Array},
+  videos:{ type: Array},
+  images:{ type: Array},
+  pdfs:{ type: Array},
   userId: { type: ObjectId, ref: 'Users' },
   comments: [
     {

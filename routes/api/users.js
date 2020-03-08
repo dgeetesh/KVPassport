@@ -344,15 +344,22 @@ router.post('/uploadPost',auth.required, (req, res) => {
           //   share_post.caption=req.body.caption;
           // }
           let imageArray=[];
+          let videoArray=[];
+          let pdfArray=[];
           if(req.files.length>0){
             req.files.map(files=>{
               if(files && files.mimetype.includes('image')){
                 var postImagename=files ? files.filename : '';
-                imageArray.push(link+postImagename);
-                share_post.image=imageArray;
+                imageArray.push({image:link+postImagename});
+                share_post.images=imageArray;
               }else if(files && files.mimetype.includes('video')){
                 var postVideoname=files ? files.filename : '';
-                share_post.video.push(link+postVideoname);
+                videoArray.push({video:link+postVideoname});
+                share_post.images=videoArray;
+              }else if(files && files.mimetype.includes('pdf')){
+                var postPdfName=files ? files.filename : '';
+                pdfArray.push({pdf:link+postPdfName});
+                share_post.images=pdfArray;
               }
             });
           }
