@@ -477,16 +477,41 @@ router.post('/deletePost', auth.required, (req, res) => {
   const { payload: { id } } = req;
   const postId=req.body.postId;
   if(postId){
-    return sharePost.deleteOne({_id:postId})
-      .then((deletePost) => {
-        console.log('deletePost',deletePost);
-        return res.json({ post: 'Post Deleted Successfully',status:200 });
-      }).catch(err=>{
-        console.log(err);
-        return res.sendStatus(500).json({
-          post: 'Error in Deleting Post',status:500
-        });
+    return Users.findById(id)
+      .then((user) => {
+        if(!user) {
+          return res.sendStatus(400);
+        }
+        return sharePost.deleteOne({_id:postId})
+          .then((deletePost) => {
+            let domain=user.domain;
+            console.log('deletePost',deletePost);
+            let pArr=[];
+            pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
+            pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
+            pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
+            Promise.all(pArr).then(function(values) {
+              if(!values) {
+                return res.json({ error:'Data Not Found', timeLine: [], status:400 });
+              }
+              let getAllPostsData={
+                commonTimeline:values[0],
+                personalTimeline:values[1],
+                domainTimeline:values[2],
+              };
+              return res.json({ timeLine:getAllPostsData,status:200 });
+            // return res.json({ post: 'Post Deleted Successfully',status:200 });
+            }).catch(err=>{
+              return res.json({ error:'Data Not Found', timeLine: [], status:500 });
+            });
+          }).catch(err=>{
+            console.log(err);
+            return res.sendStatus(500).json({
+              post: 'Error in Deleting Post',status:500
+            });
+          });
       });
+
   }else{
     return res.status(422).json({
       errors: {
