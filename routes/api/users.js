@@ -306,7 +306,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
             return res.sendStatus(400);
           }
           let postData=req.body;
-          console.log('postData',postData,req.files);
+          console.log('postData----',postData,req.files);
           if(req.files.length === 0 && !postData.caption){
             throw 'Data Not Found';
           }
