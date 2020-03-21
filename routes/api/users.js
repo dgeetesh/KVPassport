@@ -367,10 +367,6 @@ router.post('/uploadPost',auth.required, (req, res) => {
               pArr.push(sharePost.find({commonTimeline:true}).sort({postedOn:-1}));
               pArr.push(sharePost.find({userId:id}).sort({postedOn:-1}));
               pArr.push(sharePost.find({domainTimeline:true,domain:domain}).sort({postedOn:-1}));
-              // pArr.push(
-              //   sharePost.aggregate([
-              //     { "$match": domainTimeline:true,domain:domain },])
-              // );
               Promise.all(pArr).then(function(values) {
                 if(!values) {
                   return res.json({ error:'Data Not Found', timeLine: [], status:400 });
@@ -802,8 +798,8 @@ router.post('/dataFordomain', function(req, res){
     domainkey3='jobPrefrence';
     domainkey4='activities';
     pArr.push(achievers.find());
-    pArr.push(sharePost.find({tag:'matrimony'}));
-    pArr.push(sharePost.find({tag:'job'}));
+    pArr.push(sharePost.find({tag:'Matrimony'}));
+    pArr.push(sharePost.find({tag:'Job'}));
     pArr.push(activities.find());
   }
   pArr.push(slideShow.find());
