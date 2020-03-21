@@ -344,11 +344,11 @@ router.post('/uploadPost',auth.required, (req, res) => {
               }else if(files && files.mimetype.includes('video')){
                 var postVideoname=files ? files.filename : '';
                 videoArray.push({video:link+postVideoname});
-                share_post.images=videoArray;
+                share_post.videos=videoArray;
               }else if(files && files.mimetype.includes('pdf')){
                 var postPdfName=files ? files.filename : '';
                 pdfArray.push({pdf:link+postPdfName});
-                share_post.images=pdfArray;
+                share_post.pdfs=pdfArray;
               }
             });
           }
