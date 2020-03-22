@@ -350,8 +350,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
                 var sizeOf = require('image-size');
                 var dimensions = sizeOf(`public/uploads/${files.filename}`);
                 console.log(dimensions.width, dimensions.height);
-
-                imageArray.push({image:link+postImagename});
+                imageArray.push({image:link+postImagename,height:dimensions.height,width:dimensions.width});
                 share_post.images=imageArray;
               }else if(files && files.mimetype.includes('video')){
                 var postVideoname=files ? files.filename : '';
