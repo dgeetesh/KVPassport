@@ -359,6 +359,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
                 //   console.log('dimensions',dimensions.width);
                 //   console.log('dimensions',dimensions.height);
                 // });
+                console.log('postVideoname',postVideoname);
                 const info = await probe(`public/uploads/${postVideoname}`);
                 console.log('info',info);
                 // const fileMetaData = await ffprobe(link+postVideoname , { path: ffprobeStatic.path });
