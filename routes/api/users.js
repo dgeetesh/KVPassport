@@ -285,7 +285,8 @@ var storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     console.log('filename',file);
-    cb(null, Date.now() + '-' +file.originalname)
+    var name = file.originalname ? file.originalname.replace(/\s+/g, '_') : file.originalname;
+    cb(null,`${Date.now()}-${name}`);
   }
 });
 var upload = multer({ storage: storage }).array('file',10);
@@ -352,8 +353,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
                 share_post.videos=videoArray;
               }else if(files && files.mimetype.includes('pdf')){
                 var postPdfName=files ? files.filename : '';
-                var pdfName = postPdfName ? postPdfName.replace(/\s+/g, '_') : postPdfName;
-                pdfArray.push({pdf:link+postPdfName,name:pdfName});
+                pdfArray.push({pdf:link+postPdfName});
                 share_post.pdfs=pdfArray;
               }
             });
