@@ -348,7 +348,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
               if(files && files.mimetype.includes('image')){
                 var postImagename=files ? files.filename : '';
                 var sizeOf = require('image-size');
-                var dimensions = sizeOf(`uploads/${files.filename}`);
+                var dimensions = sizeOf(`public/uploads/${files.filename}`);
                 console.log(dimensions.width, dimensions.height);
 
                 imageArray.push({image:link+postImagename});
