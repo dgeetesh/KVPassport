@@ -352,7 +352,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
                 share_post.videos=videoArray;
               }else if(files && files.mimetype.includes('pdf')){
                 var postPdfName=files ? files.filename : '';
-                var pdfName = postPdfName ? postPdfName.replace(' ', '_') : postPdfName;
+                var pdfName = postPdfName ? postPdfName.replace(/\s+/g, '_') : postPdfName;
                 pdfArray.push({pdf:link+postPdfName,name:pdfName});
                 share_post.pdfs=pdfArray;
               }
