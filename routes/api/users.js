@@ -344,7 +344,7 @@ router.post('/uploadPost',auth.required, (req, res) => {
                 console.log(dimensions.width, dimensions.height);
                 imageArray.push({image:link+postImagename,height:dimensions.height,width:dimensions.width});
                 share_post.images=imageArray;
-                imageArray.push({image:link+postImagename});
+                // imageArray.push({image:link+postImagename});
                 share_post.images=imageArray;
               }else if(files && files.mimetype.includes('video')){
                 var postVideoname=files ? files.filename : '';
