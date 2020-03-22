@@ -363,7 +363,6 @@ router.post('/uploadPost',auth.required, (req, res) => {
                 console.log('info',info);
                 // const fileMetaData = await ffprobe(link+postVideoname , { path: ffprobeStatic.path });
                 // console.log('fileMetaData',fileMetaData);
-
                 videoArray.push({video:link+postVideoname});
                 share_post.videos=videoArray;
               }else if(files && files.mimetype.includes('pdf')){
