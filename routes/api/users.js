@@ -14,11 +14,10 @@ const coachings =  mongoose.model('coachings');
 const college =  mongoose.model('college');
 const activities =  mongoose.model('activities');
 const hotLinks = mongoose.model('hotLinks');
-const getDimensions = require('get-video-dimensions');
-
 // var formidable = require('formidable');
 // var fs = require('fs');
 // const moment=require('moment');
+var sizeOf = require('image-size');
 // eslint-disable-next-line no-unused-vars
 var _ = require('lodash');
 var link='https://kvmobileapp.herokuapp.com/uploads/';
@@ -292,12 +291,6 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).array('file',10);
 // var upload = multer({ storage: storage });
 
-// const ffmpeg = require('fluent-ffmpeg');
-// const probe = require('ffmpeg-probe');
-
-// const ffprobe = require('ffprobe');
-// const ffprobeStatic = require('ffprobe-static');
-
 // POST current route (required, only authenticated users have access) sharig post with multer
 router.post('/uploadPost',auth.required, (req, res) => {
   const { payload: { id } } = req;
@@ -344,26 +337,17 @@ router.post('/uploadPost',auth.required, (req, res) => {
           let videoArray=[];
           let pdfArray=[];
           if(req.files.length>0){
-            req.files.map(async(files)=>{
+            req.files.map(files=>{
               if(files && files.mimetype.includes('image')){
                 var postImagename=files ? files.filename : '';
-                var sizeOf = require('image-size');
                 var dimensions = sizeOf(`public/uploads/${files.filename}`);
                 console.log(dimensions.width, dimensions.height);
                 imageArray.push({image:link+postImagename,height:dimensions.height,width:dimensions.width});
                 share_post.images=imageArray;
+                imageArray.push({image:link+postImagename});
+                share_post.images=imageArray;
               }else if(files && files.mimetype.includes('video')){
                 var postVideoname=files ? files.filename : '';
-                // const dimensions = await getDimensions(link+postVideoname);
-                // getDimensions(link+postVideoname).then(function (dimensions) {
-                //   console.log('dimensions',dimensions.width);
-                //   console.log('dimensions',dimensions.height);
-                // });
-                console.log('postVideoname',postVideoname);
-                // const info = await probe(`public/uploads/${postVideoname}`);
-                // console.log('info',info);
-                // const fileMetaData = await ffprobe(link+postVideoname , { path: ffprobeStatic.path });
-                // console.log('fileMetaData',fileMetaData);
                 videoArray.push({video:link+postVideoname});
                 share_post.videos=videoArray;
               }else if(files && files.mimetype.includes('pdf')){
