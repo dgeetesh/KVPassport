@@ -855,7 +855,6 @@ router.get('/getUserProfile', auth.required, (req, res) => {
   }
 });
 
-
 // POST profile route (required, only authenticated users have access) editUserProfile with multer
 router.post('/editUserProfile',auth.required, (req, res) => {
   const { payload: { id } } = req;
