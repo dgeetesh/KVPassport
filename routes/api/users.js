@@ -292,11 +292,11 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).array('file',10);
 // var upload = multer({ storage: storage });
 
-const ffmpeg = require('fluent-ffmpeg');
-const probe = require('ffmpeg-probe');
+// const ffmpeg = require('fluent-ffmpeg');
+// const probe = require('ffmpeg-probe');
 
-const ffprobe = require('ffprobe');
-const ffprobeStatic = require('ffprobe-static');
+// const ffprobe = require('ffprobe');
+// const ffprobeStatic = require('ffprobe-static');
 
 // POST current route (required, only authenticated users have access) sharig post with multer
 router.post('/uploadPost',auth.required, (req, res) => {
