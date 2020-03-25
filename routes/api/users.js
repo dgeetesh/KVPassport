@@ -297,8 +297,10 @@ router.get('/current', auth.required,checkCache, (req, res) => {
 // POST current route (required, only authenticated users have access) sharig post with multer
 router.post('/uploadPost',auth.required, (req, res) => {
   const { payload: { id } } = req;
+  console.log('id----',id);
   if(id){
     upload(req, res, function (err) {
+      console.log('err----',err);
       if (err instanceof multer.MulterError) {
         return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
       } else if (err) {
