@@ -857,61 +857,64 @@ router.get('/getUserProfile', auth.required, (req, res) => {
     });
   }
 });
-
+// Working
 // POST profile route (required, only authenticated users have access) editUserProfile with multer
-router.post('/editUserProfile',auth.required, (req, res) => {
-  const { payload: { id } } = req;
-  if(id){
-    singleUpload(req, res, function (err) {
-      if (err instanceof multer.MulterError) {
-        return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
-      } else if (err) {
-        return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
-      }
-      return Users.findById(id)
-        .then((user) => {
-          if(!user) {
-            return res.sendStatus(400);
-          }
-          let updateData=req.body;
-          console.log('postData----',updateData,req.file);
-          if(!req.file){
-            throw 'Data Not Found';
-          }
-          let setData={};
-          Object.keys(updateData).forEach(function (key) {
-            setData[key]=updateData[key];
-          });
-          let profileName=req.file ? req.file.filename : '';
-          setData.profilePic=`${link}${profileName}`;
-          console.log(setData); // value
-          return Users.update({_id:id},
-            {
-              $set:setData
-            })
-            .then((updatedData) => {
-              console.log(updatedData); // value
-              return Users.findOne({_id:id})
-                .then((userData) => {
-                  if(!userData) {
-                    return res.json({ user: {}, status:500 });
-                  }
-                  return res.json({ user: createJson(userData), status:200 });
-                }).catch(errorEditUserProfile=>{
-                  console.log('errorEditUserProfile',errorEditUserProfile);
-                  return res.json({ user: {}, status:500 });
-                });
-            });
-        }).catch(postErr=>{
-          console.log('postErr',postErr);
-          return res.json({ error:'Data Not Found',timeLine: [],status:500  });
-        });
-    });
-  }else
-  {
-    return res.json({ error:'Data Not Found',status:400  });
-  }
-});
+// router.post('/editUserProfile',auth.required, (req, res) => {
+//   const { payload: { id } } = req;
+//   if(id){
+//     singleUpload(req, res, function (err) {
+//       if (err instanceof multer.MulterError) {
+//         return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
+//       } else if (err) {
+//         return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
+//       }
+//       return Users.findById(id)
+//         .then((user) => {
+//           if(!user) {
+//             return res.sendStatus(400);
+//           }
+//           let updateData=req.body;
+//           console.log('postData----',updateData,req.file);
+//           if(!req.file){
+//             throw 'Data Not Found';
+//           }
+//           let setData={};
+//           Object.keys(updateData).forEach(function (key) {
+//             setData[key]=updateData[key];
+//           });
+//           let profileName=req.file ? req.file.filename : '';
+//           setData.profilePic=`${link}${profileName}`;
+//           console.log(setData); // value
+//           return Users.update({_id:id},
+//             {
+//               $set:setData
+//             })
+//             .then((updatedData) => {
+//               console.log(updatedData); // value
+//               return Users.findOne({_id:id})
+//                 .then((userData) => {
+//                   if(!userData) {
+//                     return res.json({ user: {}, status:500 });
+//                   }
+//                   return res.json({ user: createJson(userData), status:200 });
+//                 }).catch(errorEditUserProfile=>{
+//                   console.log('errorEditUserProfile',errorEditUserProfile);
+//                   return res.json({ user: {}, status:500 });
+//                 });
+//             });
+//         }).catch(postErr=>{
+//           console.log('postErr',postErr);
+//           return res.json({ error:'Data Not Found',timeLine: [],status:500  });
+//         });
+//     });
+//   }else
+//   {
+//     return res.json({ error:'Data Not Found',status:400  });
+//   }
+// });
+
+
+// Not in use
 // router.post('/editUserProfile', auth.required, (req, res) => {
 //   const { payload: { id } } = req;
 //   let updateData=req.body;
@@ -994,54 +997,54 @@ router.post('/forgotPassword', auth.optional, (req, res) => {
 
 
 // POST profile route (required, only authenticated users have access) uploadProfile with multer
-router.post('/uploadProfile',auth.required, (req, res) => {
-  const { payload: { id } } = req;
-  if(id){
-    singleUpload(req, res, function (err) {
-      if (err instanceof multer.MulterError) {
-        return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
-      } else if (err) {
-        return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
-      }
-      return Users.findById(id)
-        .then((user) => {
-          if(!user) {
-            return res.sendStatus(400);
-          }
-          let postData=req.body;
-          console.log('postData----',postData,req.file);
-          if(!req.file){
-            throw 'Data Not Found';
-          }
-          let setData={};
-          let profileName=req.file ? req.file.filename : '';
-          setData.profilePic=`${link}${profileName}`;
-          console.log(setData); // value
-          return Users.update({_id:id},
-            {
-              $set:setData
-            })
-            .then((updateData) => {
-              console.log(updateData); // value
-              return Users.findOne({_id:id})
-                .then((userData) => {
-                  if(!userData) {
-                    return res.json({ user: {}, status:500 });
-                  }
-                  return res.json({ user: createJson(userData), status:200 });
-                }).catch(errorEditUserProfile=>{
-                  console.log('errorEditUserProfile',errorEditUserProfile);
-                  return res.json({ user: {}, status:500 });
-                });
-            });
-        }).catch(postErr=>{
-          console.log('postErr',postErr);
-          return res.json({ error:'Data Not Found',timeLine: [],status:500  });
-        });
-    });
-  }else
-  {
-    return res.json({ error:'Data Not Found',status:400  });
-  }
-});
+// router.post('/uploadProfile',auth.required, (req, res) => {
+//   const { payload: { id } } = req;
+//   if(id){
+//     singleUpload(req, res, function (err) {
+//       if (err instanceof multer.MulterError) {
+//         return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
+//       } else if (err) {
+//         return res.json({ message:'Data Not Found',Error:err, timeLine: [], status:400 });
+//       }
+//       return Users.findById(id)
+//         .then((user) => {
+//           if(!user) {
+//             return res.sendStatus(400);
+//           }
+//           let postData=req.body;
+//           console.log('postData----',postData,req.file);
+//           if(!req.file){
+//             throw 'Data Not Found';
+//           }
+//           let setData={};
+//           let profileName=req.file ? req.file.filename : '';
+//           setData.profilePic=`${link}${profileName}`;
+//           console.log(setData); // value
+//           return Users.update({_id:id},
+//             {
+//               $set:setData
+//             })
+//             .then((updateData) => {
+//               console.log(updateData); // value
+//               return Users.findOne({_id:id})
+//                 .then((userData) => {
+//                   if(!userData) {
+//                     return res.json({ user: {}, status:500 });
+//                   }
+//                   return res.json({ user: createJson(userData), status:200 });
+//                 }).catch(errorEditUserProfile=>{
+//                   console.log('errorEditUserProfile',errorEditUserProfile);
+//                   return res.json({ user: {}, status:500 });
+//                 });
+//             });
+//         }).catch(postErr=>{
+//           console.log('postErr',postErr);
+//           return res.json({ error:'Data Not Found',timeLine: [],status:500  });
+//         });
+//     });
+//   }else
+//   {
+//     return res.json({ error:'Data Not Found',status:400  });
+//   }
+// });
 module.exports = router;
