@@ -36,7 +36,7 @@ var storage = multer.diskStorage({
   }
 });
 var upload = multer({ storage: storage }).array('file',10);
-var singleUpload = multer({ storage: storage }).single('file');
+// var singleUpload = multer({ storage: storage }).single('file');
 
 
 //Register the user for the first time parameters includes (email,pass,firstname,lastname)
